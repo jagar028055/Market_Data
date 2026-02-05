@@ -1,4 +1,4 @@
-name: Economic Indicators Fetcher
+name: Investpy Economic Calendar
 
 on:
   schedule:
@@ -7,32 +7,35 @@ on:
   workflow_dispatch: # 手動実行も可能
 
 jobs:
-  fetch-indicators:
+  fetch-investpy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.9
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.9'
+
+      - name: Install Chrome and ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
 
       - name: Install dependencies
         run: |
-          pip install requests python-dateutil pytz
+          pip install investpy pandas lxml selenium requests
 
-      - name: Fetch economic indicators
-        env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      - name: Fetch economic calendar with investpy
         run: |
-          python market/fetch_indicators.py
+          python market/fetch_investpy.py
 
       - name: Commit and push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add market/daily/
-          git diff --quiet && git diff --staged --quiet || git commit -m "Update economic indicators $(date +'%Y-%m-%d')"
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update investpy economic calendar $(date +'%Y-%m-%d %H:%M')"
           git push
