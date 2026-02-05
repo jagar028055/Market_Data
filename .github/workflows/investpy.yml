@@ -36,11 +36,9 @@ jobs:
           python market/fetch_investpy.py
 
       - name: Commit and push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add market/daily/
           git diff --quiet && git diff --staged --quiet || git commit -m "Update investpy economic calendar $(date +'%Y-%m-%d %H:%M')"
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/jagar028055/Market_Data.git
