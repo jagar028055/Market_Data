@@ -39,10 +39,11 @@ jobs:
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/jagar028055/Market_Data.git
           git add market/daily/
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
             git commit -m "Update investpy economic calendar $(date +'%Y-%m-%d %H:%M')"
-            git push
+            git push origin master
           fi
