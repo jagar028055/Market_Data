@@ -1,0 +1,40 @@
+{
+  "united states": {
+    "country": "united states",
+    "country_name": "United States",
+    "country_name_ja": "米国",
+    "fetch_date": "2026-02-06T05:44:20.124047",
+    "bonds": [
+      {
+        "symbol": "^FVX",
+        "name": "US 2Y",
+        "period": 2,
+        "yield": 3.75,
+        "previous_yield": 3.8329999446868896,
+        "change": -0.08299994468688965,
+        "change_pct": -2.1654042756233265,
+        "date": "2026-02-05"
+      },
+      {
+        "symbol": "^TNX",
+        "name": "US 10Y",
+        "period": 10,
+        "yield": 4.210000038146973,
+        "previous_yield": 4.275000095367432,
+        "change": -0.06500005722045898,
+        "change_pct": -1.5204691408286928,
+        "date": "2026-02-05"
+      },
+      {
+        "symbol": "^TYX",
+        "name": "US 30Y",
+        "period": 30,
+        "yield": 4.861999988555908,
+        "previous_yield": 4.914999961853027,
+        "change": -0.05299997329711914,
+        "change_pct": -1.0783311029190195,
+        "date": "2026-02-05"
+      }
+    ]
+  }
+}
