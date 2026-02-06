@@ -29,6 +29,28 @@ import os
 # 経済指標の翻訳辞書
 INDICATOR_TRANSLATIONS = {
     # 米国指標
+    "MBA Mortgage Applications": "MBA住宅ローン申請指数",
+    "MBA Purchase Index": "MBA購入指数",
+    "EIA Crude Oil Inventories": "EIA原油在庫",
+    "API Weekly Crude Oil Stock": "API週間原油在庫",
+    "Weekly Jobless Claims": "週間失業保険申請件数",
+    "4-Week Bill Auction": "4週間T-bill入札",
+    "13-Week Bill Auction": "13週間T-bill入札",
+    "26-Week Bill Auction": "26週間T-bill入札",
+    "2-Year Note Auction": "2年債入札",
+    "5-Year Note Auction": "5年債入札",
+    "7-Year Note Auction": "7年債入札",
+    "10-Year Note Auction": "10年債入札",
+    "30-Year Bond Auction": "30年債入札",
+    "3-Month LIBOR": "3ヶ月LIBOR",
+    "6-Month LIBOR": "6ヶ月LIBOR",
+    "Fed Balance Sheet": "FRBバランスシート",
+    "Fed MBS Purchases": "FRB MBS購入額",
+    "Fed Treasury Purchases": "FRB米国債購入額",
+    "Total Vehicle Sales": "自動車販売台数",
+    "Motor Vehicle Sales": "自動車販売台数",
+    "CFTC USD speculative net positions": "CFTCドル投機ネットポジション",
+    "CFTC EUR speculative net positions": "CFTCユーロ投機ネットポジション",
     "Non-Farm Payrolls": "非農業部門雇用者数",
     "Unemployment Rate": "失業率",
     "Fed Interest Rate Decision": "FF金利",
@@ -62,6 +84,19 @@ INDICATOR_TRANSLATIONS = {
     "Fed Chair Powell Speaks": "パウエルFRB議長講演",
 
     # 日本指標
+    "Household Spending (YoY)": "家計支出（前年比）",
+    "Household Spending (MoM)": "家計支出（前月比）",
+    "Foreign Reserves (USD)": "外貨準備",
+    "Foreign Reserves": "外貨準備高",
+    "Leading Index": "先行指数",
+    "Coincident Indicator": "一致指数",
+    "Coincident Indicator (MoM)": "一致指数（前月比）",
+    "Leading Index (MoM)": "先行指数（前月比）",
+    "Tertiary Industry Index (MoM)": "第3次産業活動指数（前月比）",
+    "Machine Orders (MoM)": "機械受注（前月比）",
+    "Machine Tool Orders (YoY)": "工作機械受注（前年比）",
+    "CFTC JPY speculative net positions": "CFTC円投機ネットポジション",
+    "JGB Yield": "日本国債利回り",
     "Unemployment Rate": "失業率",
     "Jobs/Applications Ratio": "有効求人倍率",
     "Consumer Price Index (YoY)": "CPI（前年比）",
@@ -85,6 +120,28 @@ INDICATOR_TRANSLATIONS = {
     "Tokyo CPI (YoY)": "東京CPI（前年比）",
 
     # 英国・欧州指標
+    "Halifax House Price Index (MoM)": "Halifax住宅価格指数（前月比）",
+    "Halifax House Price Index (YoY)": "Halifax住宅価格指数（前年比）",
+    "Nationwide HPI (MoM)": "Nationwide住宅価格指数（前月比）",
+    "Nationwide HPI (YoY)": "Nationwide住宅価格指数（前年比）",
+    "RICS House Price Balance": "RICS住宅価格バランス",
+    "Rightmove House Price Index (MoM)": "Rightmove住宅価格指数（前月比）",
+    "BRC Retail Sales Monitor (YoY)": "BRC小売売上高モニター（前年比）",
+    "NIESR GDP Estimate": "NIESR GDP推計",
+    "GfK Consumer Confidence": "GfK消費者信頼感",
+    "CFTC GBP speculative net positions": "CFTCポンド投機ネットポジション",
+    "British Retail Consortium (BRC)": "英国小売業協会(BRC)",
+    "RICS House Price Balance": "RICS住宅価格バランス",
+    "M4 Money Supply (MoM)": "M4マネーサプライ（前月比）",
+    "M4 Money Supply (YoY)": "M4マネーサプライ（前年比）",
+    "Mortgage Approvals": "住宅ロード承認件数",
+    "Net Lending to Individuals": "個人向け純貸出",
+    "CBI Industrial Trends Orders": "CBI産業景況感",
+    "CBI Distributive Trades Survey": "CBI流通業調査",
+    "Manufacturing PMI": "製造業PMI",
+    "Services PMI": "サービス業PMI",
+    "Construction PMI": "建設業PMI",
+    "GDP (MoM)": "GDP（前月比）",
     "GDP (MoM)": "GDP（前月比）",
     "GDP (YoY)": "GDP（前年比）",
     "CPI (YoY)": "CPI（前年比）",
@@ -124,7 +181,21 @@ def translate_indicator(text: str) -> str:
     """指標名を日本語に翻訳（辞書にない場合は英語のまま）"""
     if not text:
         return text
-    return INDICATOR_TRANSLATIONS.get(text.strip(), text)
+
+    # 括弧で囲まれた月情報を削除してマッチング
+    # 例: "Household Spending (YoY)  (Dec)" -> "Household Spending (YoY)"
+    cleaned = text.strip()
+    import re
+    # 末尾の  (Month) や (Jan) のようなパターンを削除
+    cleaned = re.sub(r'\s+\([A-Za-z]{3}\)$', '', cleaned)
+
+    # 翻訳辞書を確認（クリーン後の文字列と元の文字列両方を試す）
+    if cleaned in INDICATOR_TRANSLATIONS:
+        return INDICATOR_TRANSLATIONS[cleaned]
+    if text.strip() in INDICATOR_TRANSLATIONS:
+        return INDICATOR_TRANSLATIONS[text.strip()]
+
+    return text
 
 class InvestpyCalendar:
     """investpyを使った経済カレンダー取得"""
