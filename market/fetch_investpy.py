@@ -595,7 +595,7 @@ def main():
     }
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = "market/daily"
+    output_dir = "market/data/daily"
 
     all_results = {}
 
