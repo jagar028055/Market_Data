@@ -24,6 +24,10 @@ import json
 import os
 import numpy as np
 
+# リポジトリルートへのパスを計算（スクリプトがどこから実行されても正しく動作するように）
+script_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.dirname(os.path.dirname(script_dir))
+
 # 日本語フォント設定
 plt.rcParams['font.family'] = 'DejaVu Sans'
 plt.rcParams['axes.unicode_minus'] = False
@@ -251,8 +255,11 @@ class YieldCurveFetcher:
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
             print(f"Saved yield curve plot: {save_path}")
         else:
-            plt.savefig('market/data/yield_curves.png', dpi=150, bbox_inches='tight')
-            print("Saved yield curve plot: market/data/yield_curves.png")
+            output_dir = os.path.join(repo_root, 'market/data/yield_curves/images')
+            os.makedirs(output_dir, exist_ok=True)
+            save_path = os.path.join(output_dir, 'yield_curves.png')
+            plt.savefig(save_path, dpi=150, bbox_inches='tight')
+            print(f"Saved yield curve plot: {save_path}")
 
         plt.close()
 
@@ -319,16 +326,22 @@ class YieldCurveFetcher:
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
             print(f"Saved change histogram: {save_path}")
         else:
-            plt.savefig('market/data/yield_changes.png', dpi=150, bbox_inches='tight')
-            print("Saved change histogram: market/data/yield_changes.png")
+            output_dir = os.path.join(repo_root, 'market/data/yield_curves/images')
+            os.makedirs(output_dir, exist_ok=True)
+            save_path = os.path.join(output_dir, 'yield_changes.png')
+            plt.savefig(save_path, dpi=150, bbox_inches='tight')
+            print(f"Saved change histogram: {save_path}")
 
         plt.close()
 
-    def save_json(self, output_dir: str = 'market/data'):
+    def save_json(self, output_dir: str = None):
         """JSONで保存"""
         if not self.results:
             print("No data to save")
             return
+
+        if output_dir is None:
+            output_dir = os.path.join(repo_root, 'market/data/yield_curves/json')
 
         os.makedirs(output_dir, exist_ok=True)
 
@@ -400,18 +413,12 @@ def main():
     # サマリーを表示
     fetcher.print_summary()
 
-    # グラフを保存
-    output_dir = 'market/data'
-    os.makedirs(output_dir, exist_ok=True)
-
-    yield_curve_path = os.path.join(output_dir, 'yield_curves.png')
-    change_hist_path = os.path.join(output_dir, 'yield_changes.png')
-
-    fetcher.plot_yield_curves(save_path=yield_curve_path)
-    fetcher.plot_change_histogram(save_path=change_hist_path)
+    # グラフを保存（repo_root を使用）
+    fetcher.plot_yield_curves()
+    fetcher.plot_change_histogram()
 
     # JSONを保存
-    fetcher.save_json(output_dir=output_dir)
+    fetcher.save_json()
 
     print("\nDone!")
 

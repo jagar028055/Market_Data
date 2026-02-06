@@ -33,12 +33,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install investpy pandas matplotlib numpy
+          pip install yfinance pandas matplotlib numpy
 
       - name: Fetch yield curves
         run: |
           cd market/scripts
-          python fetch_yield_curve.py
+          python fetch_yield_curve_yfinance.py
 
       - name: Commit and push
         run: |
