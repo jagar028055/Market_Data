@@ -1,0 +1,60 @@
+name: Fetch Yield Curves
+
+on:
+  schedule:
+    # 毎日9:00 JST (00:00 UTC) に実行
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 手動実行も可能
+  push:
+    paths:
+      - 'market/scripts/fetch_yield_curve.py'
+      - '.github/workflows/yield_curve.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-yield-curves:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install Chrome and ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+
+      - name: Install dependencies
+        run: |
+          pip install investpy pandas matplotlib numpy
+
+      - name: Fetch yield curves
+        run: |
+          cd market/scripts
+          python fetch_yield_curve.py
+
+      - name: Commit and push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/jagar028055/Market_Data.git
+          if [ -d "market/data" ]; then
+            git add market/data/
+            if git diff --staged --quiet; then
+              echo "No changes to commit"
+            else
+              commit_msg="Update yield curves $(date +'%Y-%m-%d %H:%M')"
+              echo "Committing: $commit_msg"
+              git commit -m "$commit_msg"
+              git push origin master
+            fi
+          else
+            echo "market/data directory does not exist - no data to commit"
+          fi
