@@ -282,14 +282,6 @@ def main():
         data = calendar.fetch_today_tomorrow(country=country, time_zone=time_zone)
 
         if data:
-            # 国コード付きで保存
-            calendar.save_json(data, f"{output_dir}/investpy_{code}_{timestamp}.json")
-            calendar.save_markdown(data, f"{output_dir}/investpy_{code}_{timestamp}.md")
-
-            # 最新版としても保存
-            calendar.save_json(data, f"{output_dir}/investpy_{code}_latest.json")
-            calendar.save_markdown(data, f"{output_dir}/investpy_{code}_latest.md")
-
             all_results[code] = data
 
             # 結果を表示
@@ -320,13 +312,22 @@ def main():
         else:
             print(f"Failed to fetch data for {country}")
 
-    # 全データを統合したJSONも保存
+    # 全データを統合して保存
     if all_results:
         import json
-        combined_file = f"{output_dir}/investpy_all_{timestamp}.json"
+        os.makedirs(output_dir, exist_ok=True)
+
+        # タイムスタンプ付きファイル
+        combined_file = f"{output_dir}/investpy_{timestamp}.json"
         with open(combined_file, 'w', encoding='utf-8') as f:
             json.dump(all_results, f, ensure_ascii=False, indent=2)
         print(f"\n統合データを保存: {combined_file}")
+
+        # 最新版ファイル
+        latest_file = f"{output_dir}/investpy_latest.json"
+        with open(latest_file, 'w', encoding='utf-8') as f:
+            json.dump(all_results, f, ensure_ascii=False, indent=2)
+        print(f"最新版を保存: {latest_file}")
 
 
 if __name__ == "__main__":
