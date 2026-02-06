@@ -26,6 +26,106 @@ from datetime import datetime, timedelta
 import json
 import os
 
+# 経済指標の翻訳辞書
+INDICATOR_TRANSLATIONS = {
+    # 米国指標
+    "Non-Farm Payrolls": "非農業部門雇用者数",
+    "Unemployment Rate": "失業率",
+    "Fed Interest Rate Decision": "FF金利",
+    "CPI (YoY)": "CPI（前年比）",
+    "Core CPI (YoY)": "コアCPI（前年比）",
+    "Retail Sales (MoM)": "小売売上高（前月比）",
+    "Core Retail Sales (MoM)": "コア小売売上高（前月比）",
+    "GDP (QoQ)": "GDP（前期比）",
+    "GDP Annualized": "GDP（年率）",
+    "ISM Manufacturing PMI": "ISM製造業PMI",
+    "ISM Services PMI": "ISM非製造業PMI",
+    "ADP Non-Farm Employment Change": "ADP雇用統計",
+    "Initial Jobless Claims": "新規失業保険申請件数",
+    "Continuing Jobless Claims": "失業保険継続受給件数",
+    "Consumer Confidence": "消費者信頼感指数",
+    "Consumer Sentiment": "ミシガン大消費者信頼感指数",
+    "Building Permits": "建設許可件数",
+    "Housing Starts": "住宅着工戸数",
+    "Existing Home Sales (MoM)": "中古住宅販売件数（前月比）",
+    "New Home Sales": "新築住宅販売件数",
+    "Durable Goods Orders (MoM)": "耐久財受注（前月比）",
+    "Core Durable Goods Orders (MoM)": "コア耐久財受注（前月比）",
+    "Industrial Production (MoM)": "鉱工業生産指数（前月比）",
+    "Capacity Utilization Rate": "設備稼働率",
+    "Business Inventories (MoM)": "企業在庫（前月比）",
+    "Wholesale Inventories (MoM)": "卸売在庫（前月比）",
+    "Trade Balance": "貿易収支",
+    "PPI (MoM)": "PPI（前月比）",
+    "Core PPI (MoM)": "コアPPI（前月比）",
+    "FOMC Meeting Minutes": "FOMC議事要旨",
+    "Fed Chair Powell Speaks": "パウエルFRB議長講演",
+
+    # 日本指標
+    "Unemployment Rate": "失業率",
+    "Jobs/Applications Ratio": "有効求人倍率",
+    "Consumer Price Index (YoY)": "CPI（前年比）",
+    "Core CPI (YoY)": "コアCPI（前年比）",
+    "Core-Core CPI (YoY)": "コアコアCPI（前年比）",
+    "GDP (QoQ)": "GDP（前期比）",
+    "GDP Annualized": "GDP（年率）",
+    "Industrial Production (MoM)": "鉱工業生産指数（前月比）",
+    "Retail Sales (YoY)": "小売売上高（前年比）",
+    "Retail Sales (MoM)": "小売売上高（前月比）",
+    "Trade Balance": "貿易収支",
+    "Current Account": "経常収支",
+    "Machine Orders (MoM)": "機械受注（前月比）",
+    "PPI (MoM)": "企業物価指数（前月比）",
+    "Manufacturing PMI": "製造業PMI",
+    "Services PMI": "サービス業PMI",
+    "Tertiary Industry Index (MoM)": "第3次産業活動指数（前月比）",
+    "BoJ Interest Rate Decision": "日銀政策金利",
+    "BoJ Summary of Opinions": "日銀意見要旨",
+    "BoJ Governor Ueda Speaks": "植田日銀総裁講演",
+    "Tokyo CPI (YoY)": "東京CPI（前年比）",
+
+    # 英国・欧州指標
+    "GDP (MoM)": "GDP（前月比）",
+    "GDP (YoY)": "GDP（前年比）",
+    "CPI (YoY)": "CPI（前年比）",
+    "Core CPI (YoY)": "コアCPI（前年比）",
+    "HPI (YoY)": "住宅価格指数（前年比）",
+    "Claimant Count Change": "失業保険申請件数の変化",
+    "Average Earnings Index +Bonus": "平均賃金（ボーナス含む）",
+    "Average Earnings Index Excluding Bonus": "平均賃金（ボーナス除く）",
+    "Manufacturing PMI": "製造業PMI",
+    "Services PMI": "サービス業PMI",
+    "Construction PMI": "建設業PMI",
+    "Industrial Production (MoM)": "鉱工業生産（前月比）",
+    "Trade Balance": "貿易収支",
+    "BoE Interest Rate Decision": "BoE政策金利",
+    "BoE MPC Meeting Minutes": "BoE議事要旨",
+    "BoE Gov Bailey Speaks": "ベイリーBoE総裁講演",
+    "Retail Sales (MoM)": "小売売上高（前月比）",
+    "Retail Sales (YoY)": "小売売上高（前年比）",
+    "ILO Unemployment Rate": "ILO失業率",
+
+    # 一般的な指標
+    "PMI": "PMI",
+    "Consumer Confidence": "消費者信頼感",
+    "Business Confidence": "企業信頼感",
+    "Interest Rate Decision": "政策金利",
+    "Central Bank Speech": "中銀総裁講演",
+    "Inflation Report": "インフレ報告書",
+    "Monetary Policy Summary": "金融政策概要",
+    "Fiscal Balance": "財政収支",
+    "Government Budget Value": "政府財政収支",
+    "Government Debt to GDP": "政府債務対GDP比",
+    "Current Account": "経常収支",
+    "Foreign Direct Investment": "海外直接投資",
+}
+
+def translate_indicator(text: str) -> str:
+    """指標名を日本語に翻訳（辞書にない場合は英語のまま）"""
+    if not text:
+        return text
+    return INDICATOR_TRANSLATIONS.get(text.strip(), text)
+
 class InvestpyCalendar:
     """investpyを使った経済カレンダー取得"""
 
@@ -81,7 +181,7 @@ class InvestpyCalendar:
                         'date': row.get('date', ''),
                         'time': row.get('time', ''),
                         'country': row.get('country', ''),
-                        'event': row.get('event', ''),
+                        'event': translate_indicator(row.get('event', '')),
                         'importance': row.get('importance', ''),
                     }
 
