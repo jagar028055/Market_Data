@@ -53,8 +53,8 @@ class InvestpyCalendar:
         print()
 
         try:
-            calendar_data = inv.economic_calendar.EconomicCalendar(
-                countries=[country],
+            calendar_data = inv.economic_calendar(
+                country=country,
                 from_date=self._get_date_str(days_from),
                 to_date=self._get_date_str(days_to),
                 time_filter=time_filter
