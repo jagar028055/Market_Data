@@ -1,0 +1,78 @@
+{
+  "fetch_date": "2026-02-06T00:28:28.030123",
+  "country": "japan",
+  "today": [
+    {
+      "date": "06/02/2026",
+      "time": "08:30",
+      "country": "",
+      "event": "Household Spending (YoY)  (Dec)",
+      "importance": "medium",
+      "actual": "-2.6%",
+      "forecast": "-0.5%",
+      "previous": "2.9%"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "08:30",
+      "country": "",
+      "event": "Household Spending (MoM)  (Dec)",
+      "importance": "medium",
+      "actual": "-2.9%",
+      "forecast": "-1.3%",
+      "previous": "6.2%"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "08:50",
+      "country": "",
+      "event": "Foreign Reserves (USD)  (Jan)",
+      "importance": "low",
+      "actual": "1,394.8B",
+      "forecast": null,
+      "previous": "1,369.8B"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "12:00",
+      "country": "",
+      "event": "Leading Index  (Dec)",
+      "importance": "low",
+      "actual": null,
+      "forecast": "109.8",
+      "previous": "109.9"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "14:00",
+      "country": "",
+      "event": "Coincident Indicator (MoM)  (Dec)",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "-1.0%"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "14:00",
+      "country": "",
+      "event": "Leading Index (MoM)  (Dec)",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "0.1%"
+    }
+  ],
+  "tomorrow": [
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC JPY speculative net positions",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "-33.9K"
+    }
+  ]
+}

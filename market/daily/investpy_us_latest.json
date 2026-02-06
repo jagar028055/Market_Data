@@ -1,0 +1,288 @@
+{
+  "fetch_date": "2026-02-06T00:28:28.740309",
+  "country": "united states",
+  "today": [
+    {
+      "date": "06/02/2026",
+      "time": "00:00",
+      "country": "",
+      "event": "JOLTS Job Openings  (Dec)",
+      "importance": "high",
+      "actual": "6.542M",
+      "forecast": "7.200M",
+      "previous": "6.928M"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "00:30",
+      "country": "",
+      "event": "Natural Gas Storage",
+      "importance": "low",
+      "actual": "-360B",
+      "forecast": "-379B",
+      "previous": "-242B"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "00:50",
+      "country": "",
+      "event": "FOMC Member Bostic Speaks",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": null
+    },
+    {
+      "date": "06/02/2026",
+      "time": "01:30",
+      "country": "",
+      "event": "4-Week Bill Auction",
+      "importance": "low",
+      "actual": "3.630%",
+      "forecast": null,
+      "previous": "3.630%"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "01:30",
+      "country": "",
+      "event": "8-Week Bill Auction",
+      "importance": "low",
+      "actual": "3.630%",
+      "forecast": null,
+      "previous": "3.635%"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "06:30",
+      "country": "",
+      "event": "Fed's Balance Sheet",
+      "importance": "medium",
+      "actual": "6,606B",
+      "forecast": null,
+      "previous": "6,588B"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "06:30",
+      "country": "",
+      "event": "Reserve Balances with Federal Reserve Banks",
+      "importance": "low",
+      "actual": "2.937T",
+      "forecast": null,
+      "previous": "2.883T"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "09:00",
+      "country": "",
+      "event": "U.S. President Trump Speaks",
+      "importance": "high",
+      "actual": null,
+      "forecast": null,
+      "previous": null
+    }
+  ],
+  "tomorrow": [
+    {
+      "date": "07/02/2026",
+      "time": "00:00",
+      "country": "",
+      "event": "Michigan 1-Year Inflation Expectations  (Feb)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "4.0%"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "00:00",
+      "country": "",
+      "event": "Michigan 5-Year Inflation Expectations  (Feb)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "3.3%"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "00:00",
+      "country": "",
+      "event": "Michigan Consumer Expectations  (Feb)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": "56.7",
+      "previous": "57.0"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "00:00",
+      "country": "",
+      "event": "Michigan Consumer Sentiment  (Feb)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": "55.0",
+      "previous": "56.4"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "00:00",
+      "country": "",
+      "event": "Michigan Current Conditions  (Feb)",
+      "importance": "low",
+      "actual": null,
+      "forecast": "54.9",
+      "previous": "55.4"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "02:00",
+      "country": "",
+      "event": "Fed Governor Jefferson Speaks",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": null
+    },
+    {
+      "date": "07/02/2026",
+      "time": "03:00",
+      "country": "",
+      "event": "U.S. Baker Hughes Oil Rig Count",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "411"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "03:00",
+      "country": "",
+      "event": "U.S. Baker Hughes Total Rig Count",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "546"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:00",
+      "country": "",
+      "event": "Consumer Credit  (Dec)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": "9.00B",
+      "previous": "4.23B"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Aluminium speculative net positions",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "-3.6K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Copper speculative net positions",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "48.4K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Corn speculative net positions",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "-31.7K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Crude Oil speculative net positions",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "97.0K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Gold speculative net positions",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "205.4K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Nasdaq 100 speculative net positions",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "28.2K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Natural Gas speculative net positions",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "-163.6K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC S&P 500 speculative net positions",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "-99.8K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Silver speculative net positions",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "23.7K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Soybeans speculative net positions",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "57.4K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC Wheat speculative net positions",
+      "importance": "low",
+      "actual": null,
+      "forecast": null,
+      "previous": "-79.4K"
+    }
+  ]
+}

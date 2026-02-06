@@ -1,0 +1,78 @@
+{
+  "fetch_date": "2026-02-06T00:28:28.412544",
+  "country": "united kingdom",
+  "today": [
+    {
+      "date": "06/02/2026",
+      "time": "16:00",
+      "country": "",
+      "event": "Halifax House Price Index (MoM)  (Jan)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": "0.1%",
+      "previous": "-0.6%"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "16:00",
+      "country": "",
+      "event": "Halifax House Price Index (YoY)  (Jan)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "0.3%"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "19:00",
+      "country": "",
+      "event": "Mortgage Rate (GBP)  (Jan)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "6.77%"
+    },
+    {
+      "date": "06/02/2026",
+      "time": "21:00",
+      "country": "",
+      "event": "BoE MPC Member Pill Speaks",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": null
+    }
+  ],
+  "tomorrow": [
+    {
+      "date": "07/02/2026",
+      "time": "05:30",
+      "country": "",
+      "event": "CFTC GBP speculative net positions",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "-16.2K"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "16:00",
+      "country": "",
+      "event": "Halifax House Price Index (MoM)  (Jan)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "-0.6%"
+    },
+    {
+      "date": "07/02/2026",
+      "time": "16:00",
+      "country": "",
+      "event": "Halifax House Price Index (YoY)  (Jan)",
+      "importance": "medium",
+      "actual": null,
+      "forecast": null,
+      "previous": "0.3%"
+    }
+  ]
+}
