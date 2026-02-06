@@ -37,7 +37,8 @@ class InvestpyCalendar:
         country: str = 'united states',
         days_from: int = 0,
         days_to: int = 7,
-        time_filter: str = 'time_only'
+        time_filter: str = 'time_only',
+        time_zone: str = None
     ):
         """
         経済カレンダーを取得
@@ -47,9 +48,12 @@ class InvestpyCalendar:
             days_from: 何日前から
             days_to: 何日後まで
             time_filter: 'time_only' または 'all'
+            time_zone: タイムゾーン（例：'GMT +9:00'、Noneなら自動）
         """
         print(f"Fetching economic calendar for {country}...")
         print(f"Period: {days_from} days ago to {days_to} days ahead")
+        if time_zone:
+            print(f"Timezone: {time_zone}")
         print()
 
         try:
@@ -57,7 +61,8 @@ class InvestpyCalendar:
                 countries=[country],
                 from_date=self._get_date_str(days_from),
                 to_date=self._get_date_str(days_to),
-                time_filter=time_filter
+                time_filter=time_filter,
+                time_zone=time_zone
             )
 
             # DataFrameに変換
@@ -122,13 +127,14 @@ class InvestpyCalendar:
             print("4. Network connectivity issues")
             return None
 
-    def fetch_today_tomorrow(self, country: str = 'united states'):
+    def fetch_today_tomorrow(self, country: str = 'united states', time_zone: str = None):
         """今日・明日の予定を取得"""
         today_data = self.fetch_calendar(
             country=country,
             days_from=0,
             days_to=1,
-            time_filter='time_only'
+            time_filter='time_only',
+            time_zone=time_zone
         )
 
         if today_data and today_data['events']:
@@ -252,45 +258,75 @@ def main():
 
     calendar = InvestpyCalendar()
 
-    # 米国の今日・明日を取得
-    data = calendar.fetch_today_tomorrow(country='united states')
+    # タイムゾーン：東京時間（GMT+9）
+    # GitHub ActionsはUTCで動作するため、明示的に指定
+    time_zone = 'GMT +9:00'
 
-    if data:
-        # 保存
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_dir = "market/daily"
+    # 取得する国・地域
+    countries = {
+        'japan': 'jp',
+        'united kingdom': 'uk',  # 英国（欧州代表）
+        'united states': 'us'
+    }
 
-        calendar.save_json(data, f"{output_dir}/investpy_{timestamp}.json")
-        calendar.save_markdown(data, f"{output_dir}/investpy_{timestamp}.md")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_dir = "market/daily"
 
-        # 最新版としても保存
-        calendar.save_json(data, f"{output_dir}/investpy_latest.json")
-        calendar.save_markdown(data, f"{output_dir}/investpy_latest.md")
+    all_results = {}
 
-        # 結果を表示
-        print()
-        print("=" * 60)
-        print("結果")
-        print("=" * 60)
+    for country, code in countries.items():
+        print(f"\n{'=' * 60}")
+        print(f"Processing: {country.upper()}")
+        print(f"{'=' * 60}\n")
 
-        if data['today']:
-            print(f"\n今日の予定 ({len(data['today'])} 件):")
-            for event in data['today']:
-                print(f"  {event['time']}: {event['event']}")
-                if event.get('forecast'):
-                    print(f"    予想: {event['forecast']}, 前回: {event.get('previous', 'N/A')}")
+        data = calendar.fetch_today_tomorrow(country=country, time_zone=time_zone)
 
-        print()
+        if data:
+            # 国コード付きで保存
+            calendar.save_json(data, f"{output_dir}/investpy_{code}_{timestamp}.json")
+            calendar.save_markdown(data, f"{output_dir}/investpy_{code}_{timestamp}.md")
 
-        if data['tomorrow']:
-            print(f"\n明日の予定 ({len(data['tomorrow'])} 件):")
-            for event in data['tomorrow']:
-                print(f"  {event['time']}: {event['event']}")
-                if event.get('forecast'):
-                    print(f"    予想: {event['forecast']}, 前回: {event.get('previous', 'N/A')}")
+            # 最新版としても保存
+            calendar.save_json(data, f"{output_dir}/investpy_{code}_latest.json")
+            calendar.save_markdown(data, f"{output_dir}/investpy_{code}_latest.md")
 
-    else:
-        print("Failed to fetch data")
+            all_results[code] = data
+
+            # 結果を表示
+            print()
+            print("=" * 60)
+            print(f"{country.upper()} - 結果")
+            print("=" * 60)
+
+            if data['today']:
+                print(f"\n今日の予定 ({len(data['today'])} 件):")
+                for event in data['today'][:5]:  # 最初の5件のみ表示
+                    print(f"  {event['time']}: {event['event']}")
+                    if event.get('forecast'):
+                        print(f"    予想: {event['forecast']}, 前回: {event.get('previous', 'N/A')}")
+                if len(data['today']) > 5:
+                    print(f"  ... 他 {len(data['today']) - 5} 件")
+
+            print()
+
+            if data['tomorrow']:
+                print(f"\n明日の予定 ({len(data['tomorrow'])} 件):")
+                for event in data['tomorrow'][:5]:  # 最初の5件のみ表示
+                    print(f"  {event['time']}: {event['event']}")
+                    if event.get('forecast'):
+                        print(f"    予想: {event['forecast']}, 前回: {event.get('previous', 'N/A')}")
+                if len(data['tomorrow']) > 5:
+                    print(f"  ... 他 {len(data['tomorrow']) - 5} 件")
+        else:
+            print(f"Failed to fetch data for {country}")
+
+    # 全データを統合したJSONも保存
+    if all_results:
+        import json
+        combined_file = f"{output_dir}/investpy_all_{timestamp}.json"
+        with open(combined_file, 'w', encoding='utf-8') as f:
+            json.dump(all_results, f, ensure_ascii=False, indent=2)
+        print(f"\n統合データを保存: {combined_file}")
 
 
 if __name__ == "__main__":
