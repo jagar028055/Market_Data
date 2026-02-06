@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-イールドカーブ取得スクリプト（investpy版）
+イールドカーブ取得スクリプト（yfinance版）
 
-investpyを使って各国の国債利回りを取得し、イールドカープを可視化します。
+yfinanceを使って各国の国債利回りを取得し、イールドカープを可視化します。
 
 対象国:
 - 日本
@@ -13,90 +13,83 @@ investpyを使って各国の国債利回りを取得し、イールドカープ
 - オーストラリア
 
 インストール:
-    pip install investpy pandas matplotlib numpy
-
-注意:
-- investpyは2020年からメンテナンス停止
-- Python 3.9以下を推奨
-- Investing.comの構造変更で動作しない可能性があります
+    pip install yfinance pandas matplotlib numpy
 """
 
-import investpy as inv
+import yfinance as yf
 import pandas as pd
-import matplotlib
-# ヘッドレス環境（GitHub Actions）で動作させるためにAggバックエンドを使用
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 import json
 import os
 import numpy as np
 
-# 日本語フォント設定（matplotlibで日本語を表示するため）
-# Termux環境ではフォントが限られているため、英語で表示することを推奨
+# 日本語フォント設定
 plt.rcParams['font.family'] = 'DejaVu Sans'
 plt.rcParams['axes.unicode_minus'] = False
 
-# 各国の国債設定
-# investpyのbonds.get_bond_historical_data()で使用する国債名
+# 各国の国債ティッカー設定
 BONDS_CONFIG = {
     'japan': {
         'name': 'Japan',
         'name_ja': '日本',
-        'bonds': [
-            {'name': 'Japan 2Y', 'period': 2},
-            {'name': 'Japan 5Y', 'period': 5},
-            {'name': 'Japan 10Y', 'period': 10},
-            {'name': 'Japan 20Y', 'period': 20},
-            {'name': 'Japan 30Y', 'period': 30},
+        'tickers': [
+            {'symbol': '^JP6MEUR', 'name': 'Japan 2Y', 'period': 2},
+            {'symbol': '^JP5MEUR', 'name': 'Japan 5Y', 'period': 5},
+            {'symbol': '^JP10MEUR', 'name': 'Japan 10Y', 'period': 10},
+            {'symbol': '^JP20MEUR', 'name': 'Japan 20Y', 'period': 20},
+            {'symbol': '^JP30MEUR', 'name': 'Japan 30Y', 'period': 30},
+        ],
+        # 代替ティッカー（Investing.comベース）
+        'alternative_tickers': [
+            {'symbol': 'JGB6M=F', 'name': 'Japan 2Y', 'period': 2},
+            {'symbol': 'JGB=F', 'name': 'Japan 10Y', 'period': 10},
         ]
     },
     'united states': {
         'name': 'United States',
         'name_ja': '米国',
-        'bonds': [
-            {'name': 'U.S. 2Y', 'period': 2},
-            {'name': 'U.S. 5Y', 'period': 5},
-            {'name': 'U.S. 10Y', 'period': 10},
-            {'name': 'U.S. 30Y', 'period': 30},
+        'tickers': [
+            {'symbol': '^FVX', 'name': 'US 2Y', 'period': 2},
+            {'symbol': '^FVXR', 'name': 'US 5Y', 'period': 5},
+            {'symbol': '^TNX', 'name': 'US 10Y', 'period': 10},
+            {'symbol': '^TYX', 'name': 'US 30Y', 'period': 30},
         ]
     },
     'germany': {
         'name': 'Germany',
         'name_ja': 'ドイツ',
-        'bonds': [
-            {'name': 'Germany 2Y', 'period': 2},
-            {'name': 'Germany 5Y', 'period': 5},
-            {'name': 'Germany 10Y', 'period': 10},
-            {'name': 'Germany 30Y', 'period': 30},
+        'tickers': [
+            {'symbol': 'GB2Y10Y=F', 'name': 'Germany 2Y', 'period': 2},  # 近似
+            {'symbol': 'GB5Y10Y=F', 'name': 'Germany 5Y', 'period': 5},  # 近似
+            {'symbol': 'TMBMKDE-10Y', 'name': 'Germany 10Y', 'period': 10},
         ]
     },
     'france': {
         'name': 'France',
         'name_ja': 'フランス',
-        'bonds': [
-            {'name': 'France 2Y', 'period': 2},
-            {'name': 'France 5Y', 'period': 5},
-            {'name': 'France 10Y', 'period': 10},
+        'tickers': [
+            {'symbol': 'TMBMKFR-02Y', 'name': 'France 2Y', 'period': 2},
+            {'symbol': 'TMBMKFR-05Y', 'name': 'France 5Y', 'period': 5},
+            {'symbol': 'TMBMKFR-10Y', 'name': 'France 10Y', 'period': 10},
         ]
     },
     'united kingdom': {
         'name': 'United Kingdom',
         'name_ja': 'イギリス',
-        'bonds': [
-            {'name': 'U.K. 2Y', 'period': 2},
-            {'name': 'U.K. 5Y', 'period': 5},
-            {'name': 'U.K. 10Y', 'period': 10},
+        'tickers': [
+            {'symbol': 'GB00Y2Y', 'name': 'UK 2Y', 'period': 2},
+            {'symbol': 'GB00Y5Y', 'name': 'UK 5Y', 'period': 5},
+            {'symbol': 'GB00Y10Y', 'name': 'UK 10Y', 'period': 10},
         ]
     },
     'australia': {
         'name': 'Australia',
         'name_ja': 'オーストラリア',
-        'bonds': [
-            {'name': 'Australia 2Y', 'period': 2},
-            {'name': 'Australia 5Y', 'period': 5},
-            {'name': 'Australia 10Y', 'period': 10},
+        'tickers': [
+            {'symbol': 'AU2Y10Y=F', 'name': 'Australia 2Y', 'period': 2},
+            {'symbol': 'AU5Y10Y=F', 'name': 'Australia 5Y', 'period': 5},
+            {'symbol': 'TMBMKAU-10Y', 'name': 'Australia 10Y', 'period': 10},
         ]
     },
 }
@@ -108,32 +101,34 @@ class YieldCurveFetcher:
     def __init__(self):
         self.results = {}
 
-    def fetch_bond_yield(self, bond_name: str) -> dict:
+    def fetch_bond_yield(self, symbol: str, name: str, period: int) -> dict:
         """
         個別の国債利回りを取得
 
         Args:
-            bond_name: 国債名（例: 'Japan 10Y'）
+            symbol: ティッカーシンボル
+            name: 国債名
+            period: 期間（年）
 
         Returns:
             dict: 利回りデータ
         """
         try:
-            # 最新のデータを取得
-            data = inv.bonds.get_bond_historical_data(
-                bond_name,
-                from_date=(datetime.now() - timedelta(days=7)).strftime('%d/%m/%Y'),
-                to_date=datetime.now().strftime('%d/%m/%Y')
-            )
+            # 過去7日間のデータを取得
+            end_date = datetime.now()
+            start_date = end_date - timedelta(days=7)
 
-            if data is not None and not data.empty:
-                # 最新の利回り（最終行）
-                latest = data.iloc[-1]
+            ticker = yf.Ticker(symbol)
+            hist = ticker.history(start=start_date, end=end_date)
+
+            if hist is not None and not hist.empty:
+                # 最新の終値
+                latest = hist.iloc[-1]
                 latest_yield = latest['Close']
 
-                # 前日比（2行目があれば）
-                if len(data) >= 2:
-                    previous = data.iloc[-2]
+                # 前日比
+                if len(hist) >= 2:
+                    previous = hist.iloc[-2]
                     previous_yield = previous['Close']
                     change = latest_yield - previous_yield
                     change_pct = (change / previous_yield) * 100 if previous_yield != 0 else 0
@@ -143,7 +138,9 @@ class YieldCurveFetcher:
                     change_pct = None
 
                 return {
-                    'name': bond_name,
+                    'symbol': symbol,
+                    'name': name,
+                    'period': period,
                     'yield': latest_yield,
                     'previous_yield': previous_yield,
                     'change': change,
@@ -151,11 +148,11 @@ class YieldCurveFetcher:
                     'date': latest.name.strftime('%Y-%m-%d') if hasattr(latest.name, 'strftime') else str(latest.name),
                 }
             else:
-                print(f"  No data for {bond_name}")
+                print(f"  No data for {name} ({symbol})")
                 return None
 
         except Exception as e:
-            print(f"  Error fetching {bond_name}: {e}")
+            print(f"  Error fetching {name} ({symbol}): {e}")
             return None
 
     def fetch_country_yield_curve(self, country: str) -> dict:
@@ -163,7 +160,7 @@ class YieldCurveFetcher:
         国のイールドカーブ全体を取得
 
         Args:
-            country: 国コード（'japan', 'united states'等）
+            country: 国コード
 
         Returns:
             dict: イールドカーブデータ
@@ -179,11 +176,10 @@ class YieldCurveFetcher:
 
         yields_data = []
 
-        for bond in config['bonds']:
-            print(f"Fetching {bond['name']}...")
-            data = self.fetch_bond_yield(bond['name'])
+        for bond in config['tickers']:
+            print(f"Fetching {bond['name']} ({bond['symbol']})...")
+            data = self.fetch_bond_yield(bond['symbol'], bond['name'], bond['period'])
             if data:
-                data['period'] = bond['period']
                 yields_data.append(data)
 
         if yields_data:
@@ -255,11 +251,8 @@ class YieldCurveFetcher:
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
             print(f"Saved yield curve plot: {save_path}")
         else:
-            output_dir = 'market/data/yield_curves/images'
-            os.makedirs(output_dir, exist_ok=True)
-            save_path = os.path.join(output_dir, 'yield_curves.png')
-            plt.savefig(save_path, dpi=150, bbox_inches='tight')
-            print(f"Saved yield curve plot: {save_path}")
+            plt.savefig('market/data/yield_curves.png', dpi=150, bbox_inches='tight')
+            print("Saved yield curve plot: market/data/yield_curves.png")
 
         plt.close()
 
@@ -326,15 +319,12 @@ class YieldCurveFetcher:
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
             print(f"Saved change histogram: {save_path}")
         else:
-            output_dir = 'market/data/yield_curves/images'
-            os.makedirs(output_dir, exist_ok=True)
-            save_path = os.path.join(output_dir, 'yield_changes.png')
-            plt.savefig(save_path, dpi=150, bbox_inches='tight')
-            print(f"Saved change histogram: {save_path}")
+            plt.savefig('market/data/yield_changes.png', dpi=150, bbox_inches='tight')
+            print("Saved change histogram: market/data/yield_changes.png")
 
         plt.close()
 
-    def save_json(self, output_dir: str = 'market/data/yield_curves/json'):
+    def save_json(self, output_dir: str = 'market/data'):
         """JSONで保存"""
         if not self.results:
             print("No data to save")
@@ -354,51 +344,6 @@ class YieldCurveFetcher:
         latest_file = os.path.join(output_dir, "yield_curve_latest.json")
         with open(latest_file, 'w', encoding='utf-8') as f:
             json.dump(self.results, f, ensure_ascii=False, indent=2)
-        print(f"Saved: {latest_file}")
-
-    def save_markdown(self, output_dir: str = 'market/data/yield_curves/markdown'):
-        """Markdownレポートを保存"""
-        if not self.results:
-            print("No data to save")
-            return
-
-        os.makedirs(output_dir, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-        lines = [
-            "# Government Bond Yield Curves",
-            f"",
-            f"**Fetch Date**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-            f"**Data Source**: Investing.com via investpy",
-            f"",
-        ]
-
-        for country, data in self.results.items():
-            lines.extend([
-                f"## {data['country_name_ja']} ({data['country_name']})",
-                f"",
-                f"| Maturity | Yield | Change | Change % |",
-                f"|----------|-------|--------|----------|"
-            ])
-
-            for bond in data['bonds']:
-                yield_val = f"{bond['yield']:.2f}%" if bond.get('yield') is not None else "N/A"
-                change_val = f"{bond['change']:+.2f}%" if bond.get('change') is not None else "N/A"
-                change_pct_val = f"{bond['change_pct']:+.2f}%" if bond.get('change_pct') is not None else "N/A"
-                lines.append(f"| {bond['period']}Y | {yield_val} | {change_val} | {change_pct_val} |")
-
-            lines.append("")
-
-        # タイムスタンプ付きファイル
-        timestamp_file = os.path.join(output_dir, f"yield_curve_{timestamp}.md")
-        with open(timestamp_file, 'w', encoding='utf-8') as f:
-            f.write('\n'.join(lines))
-        print(f"Saved: {timestamp_file}")
-
-        # 最新版ファイル
-        latest_file = os.path.join(output_dir, "yield_curve_latest.md")
-        with open(latest_file, 'w', encoding='utf-8') as f:
-            f.write('\n'.join(lines))
         print(f"Saved: {latest_file}")
 
     def print_summary(self):
@@ -431,17 +376,17 @@ class YieldCurveFetcher:
 def main():
     """メイン処理"""
     print("=" * 80)
-    print("イールドカーブ取得（investpy版）")
+    print("イールドカーブ取得（yfinance版）")
     print("=" * 80)
     print()
 
-    # investpyのバージョン確認
+    # yfinanceのバージョン確認
     try:
-        import investpy
-        print(f"investpy version: {investpy.__version__}")
+        import yfinance
+        print(f"yfinance version: {yfinance.__version__}")
     except ImportError:
-        print("investpy not installed!")
-        print("Install with: pip install investpy pandas matplotlib numpy")
+        print("yfinance not installed!")
+        print("Install with: pip install yfinance pandas matplotlib numpy")
         return
 
     print()
@@ -456,14 +401,17 @@ def main():
     fetcher.print_summary()
 
     # グラフを保存
-    fetcher.plot_yield_curves()
-    fetcher.plot_change_histogram()
+    output_dir = 'market/data'
+    os.makedirs(output_dir, exist_ok=True)
+
+    yield_curve_path = os.path.join(output_dir, 'yield_curves.png')
+    change_hist_path = os.path.join(output_dir, 'yield_changes.png')
+
+    fetcher.plot_yield_curves(save_path=yield_curve_path)
+    fetcher.plot_change_histogram(save_path=change_hist_path)
 
     # JSONを保存
-    fetcher.save_json()
-
-    # Markdownを保存
-    fetcher.save_markdown()
+    fetcher.save_json(output_dir=output_dir)
 
     print("\nDone!")
 

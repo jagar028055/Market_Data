@@ -595,7 +595,9 @@ def main():
     }
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = "market/data/daily"
+    output_base = "market/data/economic_calendar"
+    json_dir = f"{output_base}/json"
+    md_dir = f"{output_base}/markdown"
 
     all_results = {}
 
@@ -649,16 +651,17 @@ def main():
     # 全データを統合して保存
     if all_results:
         import json
-        os.makedirs(output_dir, exist_ok=True)
+        os.makedirs(json_dir, exist_ok=True)
+        os.makedirs(md_dir, exist_ok=True)
 
         # タイムスタンプ付きJSONファイル
-        combined_file = f"{output_dir}/investpy_{timestamp}.json"
+        combined_file = f"{json_dir}/investpy_{timestamp}.json"
         with open(combined_file, 'w', encoding='utf-8') as f:
             json.dump(all_results, f, ensure_ascii=False, indent=2)
         print(f"\n統合データを保存: {combined_file}")
 
         # 最新版JSONファイル
-        latest_file = f"{output_dir}/investpy_latest.json"
+        latest_file = f"{json_dir}/investpy_latest.json"
         with open(latest_file, 'w', encoding='utf-8') as f:
             json.dump(all_results, f, ensure_ascii=False, indent=2)
         print(f"最新版JSONを保存: {latest_file}")
@@ -726,13 +729,13 @@ def main():
                 md_lines.append("")
 
         # タイムスタンプ付きMarkdownファイル
-        md_file = f"{output_dir}/investpy_{timestamp}.md"
+        md_file = f"{md_dir}/investpy_{timestamp}.md"
         with open(md_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(md_lines))
         print(f"Markdownを保存: {md_file}")
 
         # 最新版Markdownファイル
-        md_latest_file = f"{output_dir}/investpy_latest.md"
+        md_latest_file = f"{md_dir}/investpy_latest.md"
         with open(md_latest_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(md_lines))
         print(f"最新版Markdownを保存: {md_latest_file}")

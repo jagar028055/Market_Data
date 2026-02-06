@@ -40,8 +40,8 @@ jobs:
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/jagar028055/Market_Data.git
-          if [ -d "market/data/daily" ]; then
-            git add market/data/daily/
+          if [ -d "market/data/economic_calendar" ]; then
+            git add market/data/economic_calendar/
             if git diff --staged --quiet; then
               echo "No changes to commit"
             else
@@ -49,5 +49,5 @@ jobs:
               git push origin master
             fi
           else
-            echo "market/data/daily directory does not exist - no data to commit"
+            echo "market/data/economic_calendar directory does not exist - no data to commit"
           fi
