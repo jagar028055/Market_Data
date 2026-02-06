@@ -132,8 +132,8 @@ class InvestpyCalendar:
         )
 
         if today_data and today_data['events']:
-            today = datetime.now().strftime('%Y-%m-%d')
-            tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
+            today = datetime.now().strftime('%d/%m/%Y')
+            tomorrow = (datetime.now() + timedelta(days=1)).strftime('%d/%m/%Y')
 
             categorized = {
                 'fetch_date': today_data['fetch_date'],
