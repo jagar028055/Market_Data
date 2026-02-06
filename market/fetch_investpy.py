@@ -29,15 +29,19 @@ import os
 # 経済指標の翻訳辞書
 INDICATOR_TRANSLATIONS = {
     # 米国指標
-    "MBA Mortgage Applications": "MBA住宅ローン申請指数",
-    "MBA Purchase Index": "MBA購入指数",
+    "JOLTS Job Openings": "JOLTS求人件数",
+    "Natural Gas Storage": "天然ガス在庫",
     "EIA Crude Oil Inventories": "EIA原油在庫",
     "API Weekly Crude Oil Stock": "API週間原油在庫",
     "Weekly Jobless Claims": "週間失業保険申請件数",
     "4-Week Bill Auction": "4週間T-bill入札",
+    "8-Week Bill Auction": "8週間T-bill入札",
     "13-Week Bill Auction": "13週間T-bill入札",
+    "17-Week Bill Auction": "17週間T-bill入札",
     "26-Week Bill Auction": "26週間T-bill入札",
+    "52-Week Bill Auction": "52週間T-bill入札",
     "2-Year Note Auction": "2年債入札",
+    "3-Year Note Auction": "3年債入札",
     "5-Year Note Auction": "5年債入札",
     "7-Year Note Auction": "7年債入札",
     "10-Year Note Auction": "10年債入札",
@@ -45,12 +49,59 @@ INDICATOR_TRANSLATIONS = {
     "3-Month LIBOR": "3ヶ月LIBOR",
     "6-Month LIBOR": "6ヶ月LIBOR",
     "Fed Balance Sheet": "FRBバランスシート",
+    "Fed's Balance Sheet": "FRBバランスシート",
     "Fed MBS Purchases": "FRB MBS購入額",
     "Fed Treasury Purchases": "FRB米国債購入額",
+    "Reserve Balances with Federal Reserve Banks": "連銀準備預金残高",
     "Total Vehicle Sales": "自動車販売台数",
     "Motor Vehicle Sales": "自動車販売台数",
     "CFTC USD speculative net positions": "CFTCドル投機ネットポジション",
     "CFTC EUR speculative net positions": "CFTCユーロ投機ネットポジション",
+    "CFTC JPY speculative net positions": "CFTC円投機ネットポジション",
+    "CFTC GBP speculative net positions": "CFTCポンド投機ネットポジション",
+    "CFTC CHF speculative net positions": "CFTCフラン投機ネットポジション",
+    "CFTC CAD speculative net positions": "CFTCカナダドル投機ネットポジション",
+    "CFTC AUD speculative net positions": "CFTC豪ドル投機ネットポジション",
+    "CFTC NZD speculative net positions": "CFTC NZドル投機ネットポジション",
+    "CFTC Gold speculative net positions": "CFTC金投機ネットポジション",
+    "CFTC Silver speculative net positions": "CFTC銀投機ネットポジション",
+    "CFTC Copper speculative net positions": "CFTC銅投機ネットポジション",
+    "CFTC Crude Oil speculative net positions": "CFTC原油投機ネットポジション",
+    "CFTC Natural Gas speculative net positions": "CFTC天然ガス投機ネットポジション",
+    "CFTC Corn speculative net positions": "CFTCコーン投機ネットポジション",
+    "CFTC Wheat speculative net positions": "CFTC小麦投機ネットポジション",
+    "CFTC Soybeans speculative net positions": "CFTC大豆投機ネットポジション",
+    "CFTC S&P 500 speculative net positions": "CFTC S&P500投機ネットポジション",
+    "CFTC Nasdaq 100 speculative net positions": "CFTCナスダック100投機ネットポジション",
+    "CFTC Dow Jones speculative net positions": "CFTCダウ投機ネットポジション",
+    "CFTC Russell 2000 speculative net positions": "CFTCラッセル2000投機ネットポジション",
+    "CFTC Aluminium speculative net positions": "CFTCアルミニウム投機ネットポジション",
+    "Michigan Consumer Sentiment": "ミシガン大学消費者信頼感指数",
+    "Michigan Consumer Expectations": "ミシガン大学消費者期待指数",
+    "Michigan Current Conditions": "ミシガン大学現状指数",
+    "Michigan 1-Year Inflation Expectations": "ミシガン大学1年インフレ期待",
+    "Michigan 5-Year Inflation Expectations": "ミシガン大学5年インフレ期待",
+    "MBA Mortgage Applications": "MBA住宅ローン申請指数",
+    "MBA Purchase Index": "MBA購入指数",
+    "U.S. Baker Hughes Oil Rig Count": "ベーカーヒューズ原油掘削リグ数",
+    "U.S. Baker Hughes Total Rig Count": "ベーカーヒューズ総リグ数",
+    "Baker Hughes Oil Rig Count": "ベーカーヒューズ原油掘削リグ数",
+    "Baker Hughes Total Rig Count": "ベーカーヒューズ総リグ数",
+    "Consumer Credit": "消費者信用",
+    "U.S. President Trump Speaks": "トランプ大統領講演",
+    "Fed Chair Powell Speaks": "パウエルFRB議長講演",
+    "FOMC Meeting Minutes": "FOMC議事要旨",
+    "FOMC Member Bostic Speaks": "FOMCメンバー・ボスティック講演",
+    "FOMC Member Waller Speaks": "FOMCメンバー・ウォーラー講演",
+    "FOMC Member Goolsbee Speaks": "FOMCメンバー・グールズビー講演",
+    "FOMC Member Barr Speaks": "FOMCメンバー・バー講演",
+    "FOMC Member Bowman Speaks": "FOMCメンバー・ボウマン講演",
+    "FOMC Member Kugler Speaks": "FOMCメンバー・クグラー講演",
+    "FOMC Member Musalem Speaks": "FOMCメンバー・ムサレム講演",
+    "Fed Governor Jefferson Speaks": "ジェファーソンFRB理事講演",
+    "Fed Governor Bowman Speaks": "ボウマンFRB理事講演",
+    "Fed Governor Cook Speaks": "クックFRB理事講演",
+    "Fed Governor Kugler Speaks": "クグラーFRB理事講演",
     "Non-Farm Payrolls": "非農業部門雇用者数",
     "Unemployment Rate": "失業率",
     "Fed Interest Rate Decision": "FF金利",
@@ -246,7 +297,9 @@ class InvestpyCalendar:
                 # 利用可能な列のみ使用
                 available_columns = [col for col in columns if col in df.columns]
 
-                events = []
+                # 重複排除用辞書 (time, event) -> event_data
+                # 同じ時刻とイベント名の場合、より情報量が多い方を優先
+                events_dict = {}
                 for _, row in df[available_columns].iterrows():
                     event = {
                         'date': row.get('date', ''),
@@ -274,7 +327,24 @@ class InvestpyCalendar:
                     elif 'te_previous' in available_columns:
                         event['previous'] = row['te_previous']
 
-                    events.append(event)
+                    # 重複排除: 同じ(time, event)の組み合わせの場合、より良いデータを優先
+                    key = (event['time'], event['event'])
+                    if key not in events_dict:
+                        events_dict[key] = event
+                    else:
+                        # 既存のデータと比較して、より情報量が多い方を採用
+                        existing = events_dict[key]
+                        # 実績値がある方を優先
+                        if event.get('actual') and not existing.get('actual'):
+                            events_dict[key] = event
+                        # 予想値がある方を優先
+                        elif event.get('forecast') and not existing.get('forecast'):
+                            events_dict[key] = event
+                        # 前回値がある方を優先
+                        elif event.get('previous') and not existing.get('previous'):
+                            events_dict[key] = event
+
+                events = list(events_dict.values())
 
                 print(f"Found {len(events)} events")
 
