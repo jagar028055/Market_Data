@@ -33,6 +33,10 @@ import json
 import os
 import numpy as np
 
+# リポジトリルートへのパスを計算（スクリプトがどこから実行されても正しく動作するように）
+script_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.dirname(os.path.dirname(script_dir))
+
 # 日本語フォント設定（matplotlibで日本語を表示するため）
 # Termux環境ではフォントが限られているため、英語で表示することを推奨
 plt.rcParams['font.family'] = 'DejaVu Sans'
@@ -255,7 +259,7 @@ class YieldCurveFetcher:
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
             print(f"Saved yield curve plot: {save_path}")
         else:
-            output_dir = 'market/data/yield_curves/images'
+            output_dir = os.path.join(repo_root, 'market/data/yield_curves/images')
             os.makedirs(output_dir, exist_ok=True)
             save_path = os.path.join(output_dir, 'yield_curves.png')
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
@@ -326,7 +330,7 @@ class YieldCurveFetcher:
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
             print(f"Saved change histogram: {save_path}")
         else:
-            output_dir = 'market/data/yield_curves/images'
+            output_dir = os.path.join(repo_root, 'market/data/yield_curves/images')
             os.makedirs(output_dir, exist_ok=True)
             save_path = os.path.join(output_dir, 'yield_changes.png')
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
@@ -334,11 +338,14 @@ class YieldCurveFetcher:
 
         plt.close()
 
-    def save_json(self, output_dir: str = 'market/data/yield_curves/json'):
+    def save_json(self, output_dir: str = None):
         """JSONで保存"""
         if not self.results:
             print("No data to save")
             return
+
+        if output_dir is None:
+            output_dir = os.path.join(repo_root, 'market/data/yield_curves/json')
 
         os.makedirs(output_dir, exist_ok=True)
 
@@ -356,11 +363,14 @@ class YieldCurveFetcher:
             json.dump(self.results, f, ensure_ascii=False, indent=2)
         print(f"Saved: {latest_file}")
 
-    def save_markdown(self, output_dir: str = 'market/data/yield_curves/markdown'):
+    def save_markdown(self, output_dir: str = None):
         """Markdownレポートを保存"""
         if not self.results:
             print("No data to save")
             return
+
+        if output_dir is None:
+            output_dir = os.path.join(repo_root, 'market/data/yield_curves/markdown')
 
         os.makedirs(output_dir, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
