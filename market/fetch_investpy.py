@@ -317,17 +317,75 @@ def main():
         import json
         os.makedirs(output_dir, exist_ok=True)
 
-        # タイムスタンプ付きファイル
+        # タイムスタンプ付きJSONファイル
         combined_file = f"{output_dir}/investpy_{timestamp}.json"
         with open(combined_file, 'w', encoding='utf-8') as f:
             json.dump(all_results, f, ensure_ascii=False, indent=2)
         print(f"\n統合データを保存: {combined_file}")
 
-        # 最新版ファイル
+        # 最新版JSONファイル
         latest_file = f"{output_dir}/investpy_latest.json"
         with open(latest_file, 'w', encoding='utf-8') as f:
             json.dump(all_results, f, ensure_ascii=False, indent=2)
-        print(f"最新版を保存: {latest_file}")
+        print(f"最新版JSONを保存: {latest_file}")
+
+        # Markdownファイルを作成
+        md_lines = [
+            f"# 経済カレンダー（investpy）",
+            f"",
+            f"**取得日時**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            f"**タイムゾーン**: GMT+9 (東京時間)",
+            f"**データソース**: Investing.com via investpy",
+            f"",
+        ]
+
+        for code, data in all_results.items():
+            country_name = data.get('country', code).title()
+            md_lines.extend([
+                f"## {country_name.upper()}",
+                f"",
+            ])
+
+            if data.get('today'):
+                md_lines.extend([
+                    f"### 今日の予定 ({len(data['today'])}件)",
+                    f"",
+                    f"| 時刻 | 指標 | 重要度 | 予想 | 前回 | 実績 |",
+                    f"|------|----|--------|------|------|------|"
+                ])
+                for event in data['today']:
+                    md_lines.append(
+                        f"| {event['time']} | {event['event']} | {event.get('importance', 'N/A')} | "
+                        f"{event.get('forecast', 'N/A')} | {event.get('previous', 'N/A')} | "
+                        f"{event.get('actual', 'N/A')} |"
+                    )
+                md_lines.append("")
+
+            if data.get('tomorrow'):
+                md_lines.extend([
+                    f"### 明日の予定 ({len(data['tomorrow'])}件)",
+                    f"",
+                    f"| 時刻 | 指標 | 重要度 | 予想 | 前回 |",
+                    f"|------|----|--------|------|------|"
+                ])
+                for event in data['tomorrow']:
+                    md_lines.append(
+                        f"| {event['time']} | {event['event']} | {event.get('importance', 'N/A')} | "
+                        f"{event.get('forecast', 'N/A')} | {event.get('previous', 'N/A')} |"
+                    )
+                md_lines.append("")
+
+        # タイムスタンプ付きMarkdownファイル
+        md_file = f"{output_dir}/investpy_{timestamp}.md"
+        with open(md_file, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(md_lines))
+        print(f"Markdownを保存: {md_file}")
+
+        # 最新版Markdownファイル
+        md_latest_file = f"{output_dir}/investpy_latest.md"
+        with open(md_latest_file, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(md_lines))
+        print(f"最新版Markdownを保存: {md_latest_file}")
 
 
 if __name__ == "__main__":
