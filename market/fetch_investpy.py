@@ -368,25 +368,27 @@ class InvestpyCalendar:
             print("4. Network connectivity issues")
             return None
 
-    def fetch_today_tomorrow(self, country: str = 'united states', time_zone: str = None):
-        """今日・明日の予定を取得"""
-        today_data = self.fetch_calendar(
+    def fetch_three_days(self, country: str = 'united states', time_zone: str = None):
+        """昨日・今日・明日の予定を取得"""
+        data = self.fetch_calendar(
             country=country,
-            days_from=0,
+            days_from=-1,
             days_to=1,
             time_filter='time_only',
             time_zone=time_zone
         )
 
-        if today_data and today_data['events']:
+        if data and data['events']:
+            yesterday = (datetime.now() - timedelta(days=1)).strftime('%d/%m/%Y')
             today = datetime.now().strftime('%d/%m/%Y')
             tomorrow = (datetime.now() + timedelta(days=1)).strftime('%d/%m/%Y')
 
             categorized = {
-                'fetch_date': today_data['fetch_date'],
+                'fetch_date': data['fetch_date'],
                 'country': country,
-                'today': [e for e in today_data['events'] if e['date'] == today],
-                'tomorrow': [e for e in today_data['events'] if e['date'] == tomorrow]
+                'yesterday': [e for e in data['events'] if e['date'] == yesterday],
+                'today': [e for e in data['events'] if e['date'] == today],
+                'tomorrow': [e for e in data['events'] if e['date'] == tomorrow]
             }
 
             return categorized
@@ -520,7 +522,7 @@ def main():
         print(f"Processing: {country.upper()}")
         print(f"{'=' * 60}\n")
 
-        data = calendar.fetch_today_tomorrow(country=country, time_zone=time_zone)
+        data = calendar.fetch_three_days(country=country, time_zone=time_zone)
 
         if data:
             all_results[code] = data
@@ -531,7 +533,16 @@ def main():
             print(f"{country.upper()} - 結果")
             print("=" * 60)
 
-            if data['today']:
+            if data.get('yesterday'):
+                print(f"\n昨日の予定 ({len(data['yesterday'])} 件):")
+                for event in data['yesterday'][:5]:  # 最初の5件のみ表示
+                    print(f"  {event['time']}: {event['event']}")
+                    if event.get('forecast'):
+                        print(f"    予想: {event['forecast']}, 前回: {event.get('previous', 'N/A')}")
+                if len(data['yesterday']) > 5:
+                    print(f"  ... 他 {len(data['yesterday']) - 5} 件")
+
+            if data.get('today'):
                 print(f"\n今日の予定 ({len(data['today'])} 件):")
                 for event in data['today'][:5]:  # 最初の5件のみ表示
                     print(f"  {event['time']}: {event['event']}")
@@ -542,7 +553,7 @@ def main():
 
             print()
 
-            if data['tomorrow']:
+            if data.get('tomorrow'):
                 print(f"\n明日の予定 ({len(data['tomorrow'])} 件):")
                 for event in data['tomorrow'][:5]:  # 最初の5件のみ表示
                     print(f"  {event['time']}: {event['event']}")
@@ -586,6 +597,22 @@ def main():
                 f"## {country_name.upper()}",
                 f"",
             ])
+
+            if data.get('yesterday'):
+                yesterday_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+                md_lines.extend([
+                    f"### 昨日の予定 ({len(data['yesterday'])}件)",
+                    f"",
+                    f"| 時刻 | 指標 | 重要度 | 予想 | 前回 | 実績 |",
+                    f"|------|----|--------|------|------|------|"
+                ])
+                for event in data['yesterday']:
+                    md_lines.append(
+                        f"| {event['time']} | {event['event']} | {event.get('importance', 'N/A')} | "
+                        f"{event.get('forecast', 'N/A')} | {event.get('previous', 'N/A')} | "
+                        f"{event.get('actual', 'N/A')} |"
+                    )
+                md_lines.append("")
 
             if data.get('today'):
                 md_lines.extend([
