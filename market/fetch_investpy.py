@@ -54,7 +54,7 @@ class InvestpyCalendar:
 
         try:
             calendar_data = inv.economic_calendar(
-                country=country,
+                countries=[country],
                 from_date=self._get_date_str(days_from),
                 to_date=self._get_date_str(days_to),
                 time_filter=time_filter
