@@ -1,0 +1,440 @@
+{
+  "jp": {
+    "fetch_date": "2026-02-07T01:47:55.722643",
+    "country": "japan",
+    "yesterday": [
+      {
+        "date": "06/02/2026",
+        "time": "08:30",
+        "country": "",
+        "event": "家計支出（前年比）",
+        "importance": "medium",
+        "actual": "-2.6%",
+        "forecast": "-0.5%",
+        "previous": "2.9%"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "08:30",
+        "country": "",
+        "event": "家計支出（前月比）",
+        "importance": "medium",
+        "actual": "-2.9%",
+        "forecast": "-1.3%",
+        "previous": "6.2%"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "08:50",
+        "country": "",
+        "event": "外貨準備",
+        "importance": "low",
+        "actual": "1,394.8B",
+        "forecast": null,
+        "previous": "1,369.8B"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "14:00",
+        "country": "",
+        "event": "一致指数（前月比）",
+        "importance": "low",
+        "actual": "-0.4%",
+        "forecast": null,
+        "previous": "-1.0%"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "14:00",
+        "country": "",
+        "event": "先行指数",
+        "importance": "low",
+        "actual": "110.2",
+        "forecast": "109.8",
+        "previous": "109.9"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "14:00",
+        "country": "",
+        "event": "先行指数（前月比）",
+        "importance": "low",
+        "actual": "0.3%",
+        "forecast": null,
+        "previous": "0.1%"
+      }
+    ],
+    "today": [
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC円投機ネットポジション",
+        "importance": "medium",
+        "actual": "-19.2K",
+        "forecast": null,
+        "previous": "-33.9K"
+      }
+    ],
+    "tomorrow": []
+  },
+  "uk": {
+    "fetch_date": "2026-02-07T01:47:56.181518",
+    "country": "united kingdom",
+    "yesterday": [
+      {
+        "date": "06/02/2026",
+        "time": "16:00",
+        "country": "",
+        "event": "Halifax住宅価格指数（前月比）",
+        "importance": "medium",
+        "actual": "0.7%",
+        "forecast": "0.1%",
+        "previous": "-0.5%"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "16:00",
+        "country": "",
+        "event": "Halifax住宅価格指数（前年比）",
+        "importance": "medium",
+        "actual": "1.0%",
+        "forecast": null,
+        "previous": "0.4%"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "18:30",
+        "country": "",
+        "event": "住宅ローン金利（ポンド）",
+        "importance": "medium",
+        "actual": "6.62%",
+        "forecast": null,
+        "previous": "6.77%"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "21:00",
+        "country": "",
+        "event": "BoE MPCメンバー・ピル講演",
+        "importance": "medium",
+        "actual": null,
+        "forecast": null,
+        "previous": null
+      }
+    ],
+    "today": [
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTCポンド投機ネットポジション",
+        "importance": "medium",
+        "actual": "-13.9K",
+        "forecast": null,
+        "previous": "-16.2K"
+      }
+    ],
+    "tomorrow": [
+      {
+        "date": "08/02/2026",
+        "time": "15:40",
+        "country": "",
+        "event": "ベイリーBoE総裁講演",
+        "importance": "medium",
+        "actual": null,
+        "forecast": null,
+        "previous": null
+      }
+    ]
+  },
+  "us": {
+    "fetch_date": "2026-02-07T01:47:56.540211",
+    "country": "united states",
+    "yesterday": [
+      {
+        "date": "06/02/2026",
+        "time": "00:00",
+        "country": "",
+        "event": "JOLTS求人件数",
+        "importance": "high",
+        "actual": "6.542M",
+        "forecast": "7.200M",
+        "previous": "6.928M"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "00:30",
+        "country": "",
+        "event": "天然ガス在庫",
+        "importance": "low",
+        "actual": "-360B",
+        "forecast": "-379B",
+        "previous": "-242B"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "00:50",
+        "country": "",
+        "event": "FOMCメンバー・ボスティック講演",
+        "importance": "medium",
+        "actual": null,
+        "forecast": null,
+        "previous": null
+      },
+      {
+        "date": "06/02/2026",
+        "time": "01:30",
+        "country": "",
+        "event": "4週間T-bill入札",
+        "importance": "low",
+        "actual": "3.630%",
+        "forecast": null,
+        "previous": "3.630%"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "01:30",
+        "country": "",
+        "event": "8週間T-bill入札",
+        "importance": "low",
+        "actual": "3.630%",
+        "forecast": null,
+        "previous": "3.635%"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "06:30",
+        "country": "",
+        "event": "FRBバランスシート",
+        "importance": "medium",
+        "actual": "6,606B",
+        "forecast": null,
+        "previous": "6,588B"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "06:30",
+        "country": "",
+        "event": "連銀準備預金残高",
+        "importance": "low",
+        "actual": "2.937T",
+        "forecast": null,
+        "previous": "2.883T"
+      },
+      {
+        "date": "06/02/2026",
+        "time": "09:00",
+        "country": "",
+        "event": "トランプ大統領講演",
+        "importance": "high",
+        "actual": null,
+        "forecast": null,
+        "previous": null
+      }
+    ],
+    "today": [
+      {
+        "date": "07/02/2026",
+        "time": "00:00",
+        "country": "",
+        "event": "ミシガン大学1年インフレ期待",
+        "importance": "medium",
+        "actual": "3.5%",
+        "forecast": null,
+        "previous": "4.0%"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "00:00",
+        "country": "",
+        "event": "ミシガン大学5年インフレ期待",
+        "importance": "medium",
+        "actual": "3.4%",
+        "forecast": null,
+        "previous": "3.3%"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "00:00",
+        "country": "",
+        "event": "ミシガン大学消費者期待指数",
+        "importance": "medium",
+        "actual": "56.6",
+        "forecast": "56.7",
+        "previous": "57.0"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "00:00",
+        "country": "",
+        "event": "ミシガン大学消費者信頼感指数",
+        "importance": "medium",
+        "actual": "57.3",
+        "forecast": "55.0",
+        "previous": "56.4"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "00:00",
+        "country": "",
+        "event": "ミシガン大学現状指数",
+        "importance": "low",
+        "actual": "58.3",
+        "forecast": "54.9",
+        "previous": "55.4"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "02:00",
+        "country": "",
+        "event": "ジェファーソンFRB理事講演",
+        "importance": "low",
+        "actual": null,
+        "forecast": null,
+        "previous": null
+      },
+      {
+        "date": "07/02/2026",
+        "time": "03:00",
+        "country": "",
+        "event": "ベーカーヒューズ原油掘削リグ数",
+        "importance": "medium",
+        "actual": "412",
+        "forecast": null,
+        "previous": "411"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "03:00",
+        "country": "",
+        "event": "ベーカーヒューズ総リグ数",
+        "importance": "medium",
+        "actual": "551",
+        "forecast": null,
+        "previous": "546"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:00",
+        "country": "",
+        "event": "消費者信用",
+        "importance": "medium",
+        "actual": "24.05B",
+        "forecast": "9.00B",
+        "previous": "4.70B"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTCアルミニウム投機ネットポジション",
+        "importance": "low",
+        "actual": "-2.9K",
+        "forecast": null,
+        "previous": "-3.6K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC銅投機ネットポジション",
+        "importance": "low",
+        "actual": "47.8K",
+        "forecast": null,
+        "previous": "48.4K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTCコーン投機ネットポジション",
+        "importance": "low",
+        "actual": "-34.7K",
+        "forecast": null,
+        "previous": "-31.7K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC原油投機ネットポジション",
+        "importance": "medium",
+        "actual": "124.6K",
+        "forecast": null,
+        "previous": "97.0K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC金投機ネットポジション",
+        "importance": "medium",
+        "actual": "165.6K",
+        "forecast": null,
+        "previous": "205.4K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTCナスダック100投機ネットポジション",
+        "importance": "medium",
+        "actual": "14.2K",
+        "forecast": null,
+        "previous": "28.2K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC天然ガス投機ネットポジション",
+        "importance": "low",
+        "actual": "-172.3K",
+        "forecast": null,
+        "previous": "-163.6K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC S&P500投機ネットポジション",
+        "importance": "medium",
+        "actual": "-132.9K",
+        "forecast": null,
+        "previous": "-99.8K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC銀投機ネットポジション",
+        "importance": "low",
+        "actual": "25.9K",
+        "forecast": null,
+        "previous": "23.7K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC大豆投機ネットポジション",
+        "importance": "low",
+        "actual": "64.2K",
+        "forecast": null,
+        "previous": "57.4K"
+      },
+      {
+        "date": "07/02/2026",
+        "time": "05:30",
+        "country": "",
+        "event": "CFTC小麦投機ネットポジション",
+        "importance": "low",
+        "actual": "-65.5K",
+        "forecast": null,
+        "previous": "-79.4K"
+      }
+    ],
+    "tomorrow": []
+  }
+}
