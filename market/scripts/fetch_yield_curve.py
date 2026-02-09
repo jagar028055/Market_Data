@@ -37,6 +37,22 @@ import numpy as np
 script_dir = os.path.dirname(os.path.abspath(__file__))
 repo_root = os.path.dirname(os.path.dirname(script_dir))
 
+# investpyがChromeをヘッドレスモードで使用するための設定
+# Chromeオプションを設定して、GitHub Actions環境でも動作するようにする
+import selenium
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+
+# Chromeオプションの設定
+chrome_options = ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+chrome_options.add_argument('--disable-gpu')
+chrome_options.add_argument('--window-size=1920,1080')
+chrome_options.add_argument('--disable-extensions')
+chrome_options.add_argument('--disable-features=VizDisplayCompositor')
+chrome_options.add_argument('--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+
 # 日本語フォント設定（matplotlibで日本語を表示するため）
 # Termux環境ではフォントが限られているため、英語で表示することを推奨
 plt.rcParams['font.family'] = 'DejaVu Sans'
@@ -452,6 +468,31 @@ def main():
     except ImportError:
         print("investpy not installed!")
         print("Install with: pip install investpy pandas matplotlib numpy")
+        return
+
+    print()
+
+    # investpyの設定（ChromeDriverのパスを設定）
+    # ChromeDriverはGitHub Actions環境でインストール済み
+    import os
+    chrome_driver_path = '/usr/bin/chromedriver'
+    if os.path.exists(chrome_driver_path):
+        os.environ['CHROMEDRIVER_PATH'] = chrome_driver_path
+        print(f"ChromeDriver found at: {chrome_driver_path}")
+    else:
+        print("ChromeDriver not found at standard location")
+
+    # テスト: 利用可能な国債を検索
+    print("\nTesting investpy bond search...")
+    try:
+        # 日本の国債を検索してみる
+        japan_bonds = inv.bonds.get_bonds_list(country='japan')
+        print(f"Found {len(japan_bonds)} bonds for Japan")
+        if japan_bonds:
+            print(f"Sample bonds: {japan_bonds[:5]}")
+    except Exception as e:
+        print(f"Error searching bonds: {e}")
+        print("investpy may not be working properly due to Investing.com structure changes")
         return
 
     print()
