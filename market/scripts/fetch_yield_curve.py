@@ -26,34 +26,19 @@ import pandas as pd
 import os
 import sys
 
-# ChromeとChromeDriverの設定（GitHub Actions環境用）
-# ヘッドレスChromeの設定
-os.environ['CHROME_BIN'] = '/usr/bin/chromium-browser'
-os.environ['CHROMEDRIVER_PATH'] = '/usr/bin/chromedriver'
+# investpyはrequestsモジュールを使用しているため、User-Agentを上書きして最新のブラウザに見せる
+# investpy.utils.extra.random_user_agentを上書き
+def get_latest_user_agent():
+    """2025年最新のUser-Agentを返す"""
+    return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 
-# investpyがseleniumを使用する際のオプションを設定
+# investpyのrandom_user_agent関数を上書き
 try:
-    from selenium import webdriver
-    from selenium.webdriver.chrome.options import Options as ChromeOptions
-
-    # Chromeオプションの設定
-    chrome_options = ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--window-size=1920,1080')
-    chrome_options.add_argument('--disable-extensions')
-    chrome_options.add_argument('--disable-infobars')
-    chrome_options.add_argument('--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-
-    # chromedriverのパスを設定
-    chrome_options.binary_location = '/usr/bin/chromium-browser'
-
-    print("Chrome options configured for headless mode")
-except ImportError:
-    print("Warning: selenium not installed, falling back to default investpy behavior")
-    chrome_options = None
+    import investpy.utils.extra as extra
+    extra.random_user_agent = get_latest_user_agent
+    print(f"Updated investpy User-Agent to: {get_latest_user_agent()[:50]}...")
+except Exception as e:
+    print(f"Warning: Could not update User-Agent: {e}")
 import matplotlib
 # ヘッドレス環境（GitHub Actions）で動作させるためにAggバックエンドを使用
 matplotlib.use('Agg')
@@ -168,6 +153,10 @@ class YieldCurveFetcher:
                         print(f"  Attempting to fetch {current_name} (attempt {attempt + 1}/{retry_count})...")
                     else:
                         print(f"  Trying alternative name: {current_name} (attempt {attempt + 1}/{retry_count})...")
+
+                    # Investing.comのボット対策を回避するため、リクエスト前に遅延を追加
+                    import time
+                    time.sleep(3)  # 各リクエスト前に3秒待機
 
                     # 最新のデータを取得
                     data = inv.bonds.get_bond_historical_data(
@@ -284,6 +273,9 @@ class YieldCurveFetcher:
         """全対象国のイールドカーブを取得"""
         for country in BONDS_CONFIG.keys():
             self.fetch_country_yield_curve(country)
+            # 各国の間に遅延を追加して、Investing.comのボット対策を回避
+            import time
+            time.sleep(5)  # 各国の間に5秒待機
 
         return self.results
 
