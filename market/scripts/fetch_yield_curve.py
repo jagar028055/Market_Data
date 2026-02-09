@@ -82,58 +82,58 @@ BONDS_CONFIG = {
         'name': 'Japan',
         'name_ja': '日本',
         'bonds': [
-            {'name': 'Japan 2Y', 'period': 2, 'alternatives': ['JGB 2Y', 'Japan 2 Year']},
-            {'name': 'Japan 5Y', 'period': 5, 'alternatives': ['JGB 5Y', 'Japan 5 Year']},
-            {'name': 'Japan 10Y', 'period': 10, 'alternatives': ['JGB 10Y', 'Japan 10 Year']},
-            {'name': 'Japan 20Y', 'period': 20, 'alternatives': ['JGB 20Y', 'Japan 20 Year']},
-            {'name': 'Japan 30Y', 'period': 30, 'alternatives': ['JGB 30Y', 'Japan 30 Year']},
+            {'name': 'Japan 2Y', 'period': 2, 'alternatives': ['JGB 2Y', 'Japan 2 Year', 'Japan 2Y Bond', 'JGB2Y']},
+            {'name': 'Japan 5Y', 'period': 5, 'alternatives': ['JGB 5Y', 'Japan 5 Year', 'Japan 5Y Bond', 'JGB5Y']},
+            {'name': 'Japan 10Y', 'period': 10, 'alternatives': ['JGB 10Y', 'Japan 10 Year', 'Japan 10Y Bond', 'JGB10Y']},
+            {'name': 'Japan 20Y', 'period': 20, 'alternatives': ['JGB 20Y', 'Japan 20 Year', 'Japan 20Y Bond', 'JGB20Y']},
+            {'name': 'Japan 30Y', 'period': 30, 'alternatives': ['JGB 30Y', 'Japan 30 Year', 'Japan 30Y Bond', 'JGB30Y']},
         ]
     },
     'united states': {
         'name': 'United States',
         'name_ja': '米国',
         'bonds': [
-            {'name': 'U.S. 2Y', 'period': 2, 'alternatives': ['USA 2Y', 'United States 2Y', 'US 2Y', 'Treasury 2Y']},
-            {'name': 'U.S. 5Y', 'period': 5, 'alternatives': ['USA 5Y', 'United States 5Y', 'US 5Y', 'Treasury 5Y']},
-            {'name': 'U.S. 10Y', 'period': 10, 'alternatives': ['USA 10Y', 'United States 10Y', 'US 10Y', 'Treasury 10Y']},
-            {'name': 'U.S. 30Y', 'period': 30, 'alternatives': ['USA 30Y', 'United States 30Y', 'US 30Y', 'Treasury 30Y']},
+            {'name': 'U.S. 2Y', 'period': 2, 'alternatives': ['USA 2Y', 'United States 2Y', 'US 2Y', 'Treasury 2Y', 'US2Y']},
+            {'name': 'U.S. 5Y', 'period': 5, 'alternatives': ['USA 5Y', 'United States 5Y', 'US 5Y', 'Treasury 5Y', 'US5Y']},
+            {'name': 'U.S. 10Y', 'period': 10, 'alternatives': ['USA 10Y', 'United States 10Y', 'US 10Y', 'Treasury 10Y', 'US10Y']},
+            {'name': 'U.S. 30Y', 'period': 30, 'alternatives': ['USA 30Y', 'United States 30Y', 'US 30Y', 'Treasury 30Y', 'US30Y']},
         ]
     },
     'germany': {
         'name': 'Germany',
         'name_ja': 'ドイツ',
         'bonds': [
-            {'name': 'Germany 2Y', 'period': 2, 'alternatives': ['Bund 2Y', 'German 2Y']},
-            {'name': 'Germany 5Y', 'period': 5, 'alternatives': ['Bund 5Y', 'German 5Y']},
-            {'name': 'Germany 10Y', 'period': 10, 'alternatives': ['Bund 10Y', 'German 10Y']},
-            {'name': 'Germany 30Y', 'period': 30, 'alternatives': ['Bund 30Y', 'German 30Y']},
+            {'name': 'Germany 2Y', 'period': 2, 'alternatives': ['Bund 2Y', 'German 2Y', 'Germany 2Y Bond', 'DBR2Y']},
+            {'name': 'Germany 5Y', 'period': 5, 'alternatives': ['Bund 5Y', 'German 5Y', 'Germany 5Y Bond', 'DBR5Y']},
+            {'name': 'Germany 10Y', 'period': 10, 'alternatives': ['Bund 10Y', 'German 10Y', 'Germany 10Y Bond', 'DBR10Y']},
+            {'name': 'Germany 30Y', 'period': 30, 'alternatives': ['Bund 30Y', 'German 30Y', 'Germany 30Y Bond', 'DBR30Y']},
         ]
     },
     'france': {
         'name': 'France',
         'name_ja': 'フランス',
         'bonds': [
-            {'name': 'France 2Y', 'period': 2, 'alternatives': ['OAT 2Y', 'French 2Y']},
-            {'name': 'France 5Y', 'period': 5, 'alternatives': ['OAT 5Y', 'French 5Y']},
-            {'name': 'France 10Y', 'period': 10, 'alternatives': ['OAT 10Y', 'French 10Y']},
+            {'name': 'France 2Y', 'period': 2, 'alternatives': ['OAT 2Y', 'French 2Y', 'France 2Y Bond', 'OAT2Y']},
+            {'name': 'France 5Y', 'period': 5, 'alternatives': ['OAT 5Y', 'French 5Y', 'France 5Y Bond', 'OAT5Y']},
+            {'name': 'France 10Y', 'period': 10, 'alternatives': ['OAT 10Y', 'French 10Y', 'France 10Y Bond', 'OAT10Y']},
         ]
     },
     'united kingdom': {
         'name': 'United Kingdom',
         'name_ja': 'イギリス',
         'bonds': [
-            {'name': 'U.K. 2Y', 'period': 2, 'alternatives': ['UK 2Y', 'Gilt 2Y', 'United Kingdom 2Y']},
-            {'name': 'U.K. 5Y', 'period': 5, 'alternatives': ['UK 5Y', 'Gilt 5Y', 'United Kingdom 5Y']},
-            {'name': 'U.K. 10Y', 'period': 10, 'alternatives': ['UK 10Y', 'Gilt 10Y', 'United Kingdom 10Y']},
+            {'name': 'U.K. 2Y', 'period': 2, 'alternatives': ['UK 2Y', 'Gilt 2Y', 'United Kingdom 2Y', 'UK2Y', 'GB02Y']},
+            {'name': 'U.K. 5Y', 'period': 5, 'alternatives': ['UK 5Y', 'Gilt 5Y', 'United Kingdom 5Y', 'UK5Y', 'GB05Y']},
+            {'name': 'U.K. 10Y', 'period': 10, 'alternatives': ['UK 10Y', 'Gilt 10Y', 'United Kingdom 10Y', 'UK10Y', 'GB10Y']},
         ]
     },
     'australia': {
         'name': 'Australia',
         'name_ja': 'オーストラリア',
         'bonds': [
-            {'name': 'Australia 2Y', 'period': 2, 'alternatives': ['AU 2Y', 'Australian 2Y']},
-            {'name': 'Australia 5Y', 'period': 5, 'alternatives': ['AU 5Y', 'Australian 5Y']},
-            {'name': 'Australia 10Y', 'period': 10, 'alternatives': ['AU 10Y', 'Australian 10Y']},
+            {'name': 'Australia 2Y', 'period': 2, 'alternatives': ['AU 2Y', 'Australian 2Y', 'Australia 2Y Bond', 'AU2Y']},
+            {'name': 'Australia 5Y', 'period': 5, 'alternatives': ['AU 5Y', 'Australian 5Y', 'Australia 5Y Bond', 'AU5Y']},
+            {'name': 'Australia 10Y', 'period': 10, 'alternatives': ['AU 10Y', 'Australian 10Y', 'Australia 10Y Bond', 'AU10Y']},
         ]
     },
 }
