@@ -1,0 +1,52 @@
+name: Test Investpy Bonds
+
+on:
+  workflow_dispatch: # 手動実行のみ
+
+permissions:
+  contents: write
+
+jobs:
+  test-bonds:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install Chrome and ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+          which chromedriver
+          chromedriver --version
+
+      - name: Set up Chrome environment
+        run: |
+          echo "CHROME_BIN=/usr/bin/chromium-browser" >> $GITHUB_ENV
+          echo "CHROMEDRIVER_PATH=/usr/bin/chromedriver" >> $GITHUB_ENV
+          echo "/usr/bin/chromedriver" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          pip install investpy pandas selenium requests lxml
+
+      - name: Test available bonds
+        run: |
+          python market/scripts/test_investpy_bonds.py
+
+      - name: Upload results
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/jagar028055/Market_Data.git
+          if [ -f "market/data/available_bonds.json" ]; then
+            git add market/data/available_bonds.json
+            git commit -m "Update available bonds list $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
+            git push origin master || echo "No changes to push"
+          fi

@@ -23,6 +23,37 @@ investpyを使って各国の国債利回りを取得し、イールドカープ
 
 import investpy as inv
 import pandas as pd
+import os
+import sys
+
+# ChromeとChromeDriverの設定（GitHub Actions環境用）
+# ヘッドレスChromeの設定
+os.environ['CHROME_BIN'] = '/usr/bin/chromium-browser'
+os.environ['CHROMEDRIVER_PATH'] = '/usr/bin/chromedriver'
+
+# investpyがseleniumを使用する際のオプションを設定
+try:
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options as ChromeOptions
+
+    # Chromeオプションの設定
+    chrome_options = ChromeOptions()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--window-size=1920,1080')
+    chrome_options.add_argument('--disable-extensions')
+    chrome_options.add_argument('--disable-infobars')
+    chrome_options.add_argument('--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+
+    # chromedriverのパスを設定
+    chrome_options.binary_location = '/usr/bin/chromium-browser'
+
+    print("Chrome options configured for headless mode")
+except ImportError:
+    print("Warning: selenium not installed, falling back to default investpy behavior")
+    chrome_options = None
 import matplotlib
 # ヘッドレス環境（GitHub Actions）で動作させるためにAggバックエンドを使用
 matplotlib.use('Agg')
@@ -44,63 +75,65 @@ plt.rcParams['axes.unicode_minus'] = False
 
 # 各国の国債設定
 # investpyのbonds.get_bond_historical_data()で使用する国債名
+# 注: Investing.comのサイト構造変更により、bond名が変更されている可能性があります
+# 複数の候補名を試すように設計されています
 BONDS_CONFIG = {
     'japan': {
         'name': 'Japan',
         'name_ja': '日本',
         'bonds': [
-            {'name': 'Japan 2Y', 'period': 2},
-            {'name': 'Japan 5Y', 'period': 5},
-            {'name': 'Japan 10Y', 'period': 10},
-            {'name': 'Japan 20Y', 'period': 20},
-            {'name': 'Japan 30Y', 'period': 30},
+            {'name': 'Japan 2Y', 'period': 2, 'alternatives': ['JGB 2Y', 'Japan 2 Year']},
+            {'name': 'Japan 5Y', 'period': 5, 'alternatives': ['JGB 5Y', 'Japan 5 Year']},
+            {'name': 'Japan 10Y', 'period': 10, 'alternatives': ['JGB 10Y', 'Japan 10 Year']},
+            {'name': 'Japan 20Y', 'period': 20, 'alternatives': ['JGB 20Y', 'Japan 20 Year']},
+            {'name': 'Japan 30Y', 'period': 30, 'alternatives': ['JGB 30Y', 'Japan 30 Year']},
         ]
     },
     'united states': {
         'name': 'United States',
         'name_ja': '米国',
         'bonds': [
-            {'name': 'U.S. 2Y', 'period': 2},
-            {'name': 'U.S. 5Y', 'period': 5},
-            {'name': 'U.S. 10Y', 'period': 10},
-            {'name': 'U.S. 30Y', 'period': 30},
+            {'name': 'U.S. 2Y', 'period': 2, 'alternatives': ['USA 2Y', 'United States 2Y', 'US 2Y', 'Treasury 2Y']},
+            {'name': 'U.S. 5Y', 'period': 5, 'alternatives': ['USA 5Y', 'United States 5Y', 'US 5Y', 'Treasury 5Y']},
+            {'name': 'U.S. 10Y', 'period': 10, 'alternatives': ['USA 10Y', 'United States 10Y', 'US 10Y', 'Treasury 10Y']},
+            {'name': 'U.S. 30Y', 'period': 30, 'alternatives': ['USA 30Y', 'United States 30Y', 'US 30Y', 'Treasury 30Y']},
         ]
     },
     'germany': {
         'name': 'Germany',
         'name_ja': 'ドイツ',
         'bonds': [
-            {'name': 'Germany 2Y', 'period': 2},
-            {'name': 'Germany 5Y', 'period': 5},
-            {'name': 'Germany 10Y', 'period': 10},
-            {'name': 'Germany 30Y', 'period': 30},
+            {'name': 'Germany 2Y', 'period': 2, 'alternatives': ['Bund 2Y', 'German 2Y']},
+            {'name': 'Germany 5Y', 'period': 5, 'alternatives': ['Bund 5Y', 'German 5Y']},
+            {'name': 'Germany 10Y', 'period': 10, 'alternatives': ['Bund 10Y', 'German 10Y']},
+            {'name': 'Germany 30Y', 'period': 30, 'alternatives': ['Bund 30Y', 'German 30Y']},
         ]
     },
     'france': {
         'name': 'France',
         'name_ja': 'フランス',
         'bonds': [
-            {'name': 'France 2Y', 'period': 2},
-            {'name': 'France 5Y', 'period': 5},
-            {'name': 'France 10Y', 'period': 10},
+            {'name': 'France 2Y', 'period': 2, 'alternatives': ['OAT 2Y', 'French 2Y']},
+            {'name': 'France 5Y', 'period': 5, 'alternatives': ['OAT 5Y', 'French 5Y']},
+            {'name': 'France 10Y', 'period': 10, 'alternatives': ['OAT 10Y', 'French 10Y']},
         ]
     },
     'united kingdom': {
         'name': 'United Kingdom',
         'name_ja': 'イギリス',
         'bonds': [
-            {'name': 'U.K. 2Y', 'period': 2},
-            {'name': 'U.K. 5Y', 'period': 5},
-            {'name': 'U.K. 10Y', 'period': 10},
+            {'name': 'U.K. 2Y', 'period': 2, 'alternatives': ['UK 2Y', 'Gilt 2Y', 'United Kingdom 2Y']},
+            {'name': 'U.K. 5Y', 'period': 5, 'alternatives': ['UK 5Y', 'Gilt 5Y', 'United Kingdom 5Y']},
+            {'name': 'U.K. 10Y', 'period': 10, 'alternatives': ['UK 10Y', 'Gilt 10Y', 'United Kingdom 10Y']},
         ]
     },
     'australia': {
         'name': 'Australia',
         'name_ja': 'オーストラリア',
         'bonds': [
-            {'name': 'Australia 2Y', 'period': 2},
-            {'name': 'Australia 5Y', 'period': 5},
-            {'name': 'Australia 10Y', 'period': 10},
+            {'name': 'Australia 2Y', 'period': 2, 'alternatives': ['AU 2Y', 'Australian 2Y']},
+            {'name': 'Australia 5Y', 'period': 5, 'alternatives': ['AU 5Y', 'Australian 5Y']},
+            {'name': 'Australia 10Y', 'period': 10, 'alternatives': ['AU 10Y', 'Australian 10Y']},
         ]
     },
 }
@@ -112,64 +145,95 @@ class YieldCurveFetcher:
     def __init__(self):
         self.results = {}
 
-    def fetch_bond_yield(self, bond_name: str, country: str = None) -> dict:
+    def fetch_bond_yield(self, bond_config: dict, country: str = None, retry_count: int = 2) -> dict:
         """
         個別の国債利回りを取得
 
         Args:
-            bond_name: 国債名（例: 'Japan 10Y'）
+            bond_config: bond設定辞書（name, period, alternativesを含む）
             country: 国名（オプション）
+            retry_count: 各bond名でのリトライ回数
 
         Returns:
             dict: 利回りデータ
         """
-        try:
-            print(f"  Attempting to fetch {bond_name}...")
+        bond_name = bond_config['name']
+        alternatives = bond_config.get('alternatives', [])
+        all_names = [bond_name] + alternatives  # 元の名前を優先
 
-            # 最新のデータを取得
-            data = inv.bonds.get_bond_historical_data(
-                bond_name,
-                from_date=(datetime.now() - timedelta(days=7)).strftime('%d/%m/%Y'),
-                to_date=datetime.now().strftime('%d/%m/%Y')
-            )
+        for name_idx, current_name in enumerate(all_names):
+            for attempt in range(retry_count):
+                try:
+                    if name_idx == 0:
+                        print(f"  Attempting to fetch {current_name} (attempt {attempt + 1}/{retry_count})...")
+                    else:
+                        print(f"  Trying alternative name: {current_name} (attempt {attempt + 1}/{retry_count})...")
 
-            if data is not None and not data.empty:
-                print(f"  Successfully fetched {bond_name}: {len(data)} records")
+                    # 最新のデータを取得
+                    data = inv.bonds.get_bond_historical_data(
+                        current_name,
+                        from_date=(datetime.now() - timedelta(days=7)).strftime('%d/%m/%Y'),
+                        to_date=datetime.now().strftime('%d/%m/%Y'),
+                        as_json=False,  # DataFrameとして取得
+                        order='ascending'  # 昇順で取得
+                    )
 
-                # 最新の利回り（最終行）
-                latest = data.iloc[-1]
-                latest_yield = latest['Close']
+                    if data is not None and not data.empty:
+                        print(f"  Successfully fetched {current_name}: {len(data)} records")
 
-                # 前日比（2行目があれば）
-                if len(data) >= 2:
-                    previous = data.iloc[-2]
-                    previous_yield = previous['Close']
-                    change = latest_yield - previous_yield
-                    change_pct = (change / previous_yield) * 100 if previous_yield != 0 else 0
-                else:
-                    previous_yield = None
-                    change = None
-                    change_pct = None
+                        # 最新の利回り（最終行）
+                        latest = data.iloc[-1]
+                        latest_yield = latest['Close']
 
-                result = {
-                    'name': bond_name,
-                    'yield': float(latest_yield) if pd.notna(latest_yield) else None,
-                    'previous_yield': float(previous_yield) if previous_yield is not None and pd.notna(previous_yield) else None,
-                    'change': float(change) if change is not None and pd.notna(change) else None,
-                    'change_pct': float(change_pct) if change_pct is not None and pd.notna(change_pct) else None,
-                    'date': latest.name.strftime('%Y-%m-%d') if hasattr(latest.name, 'strftime') else str(latest.name),
-                }
-                print(f"  Yield: {result['yield']:.2f}%")
-                return result
-            else:
-                print(f"  No data for {bond_name}")
-                return None
+                        # 前日比（2行目があれば）
+                        if len(data) >= 2:
+                            previous = data.iloc[-2]
+                            previous_yield = previous['Close']
+                            change = latest_yield - previous_yield
+                            change_pct = (change / previous_yield) * 100 if previous_yield != 0 else 0
+                        else:
+                            previous_yield = None
+                            change = None
+                            change_pct = None
 
-        except Exception as e:
-            print(f"  Error fetching {bond_name}: {type(e).__name__}: {e}")
-            import traceback
-            print(f"  Traceback: {traceback.format_exc()}")
-            return None
+                        result = {
+                            'name': bond_name,  # 元の名前を保持
+                            'fetched_name': current_name,  # 実際に取得した名前
+                            'period': bond_config['period'],
+                            'yield': float(latest_yield) if pd.notna(latest_yield) else None,
+                            'previous_yield': float(previous_yield) if previous_yield is not None and pd.notna(previous_yield) else None,
+                            'change': float(change) if change is not None and pd.notna(change) else None,
+                            'change_pct': float(change_pct) if change_pct is not None and pd.notna(change_pct) else None,
+                            'date': latest.name.strftime('%Y-%m-%d') if hasattr(latest.name, 'strftime') else str(latest.name),
+                        }
+                        print(f"  Yield: {result['yield']:.2f}%")
+                        return result
+                    else:
+                        print(f"  No data for {current_name} (attempt {attempt + 1}/{retry_count})")
+                        if attempt < retry_count - 1:
+                            import time
+                            time.sleep(2)  # リトライ前に待機
+                        continue
+
+                except Exception as e:
+                    print(f"  Error fetching {current_name} (attempt {attempt + 1}/{retry_count}): {type(e).__name__}: {e}")
+                    if attempt < retry_count - 1:
+                        import time
+                        time.sleep(2)  # リトライ前に待機
+                        continue
+                    else:
+                        # 最終試行で失敗した場合、次のbond名を試す
+                        if name_idx < len(all_names) - 1:
+                            print(f"  Trying next alternative name...")
+                            break
+                        else:
+                            # 全てのbond名で失敗
+                            import traceback
+                            print(f"  All bond names failed. Final error traceback: {traceback.format_exc()}")
+                            return None
+
+        print(f"  Failed to fetch bond after trying all names: {bond_name}")
+        return None
 
     def fetch_country_yield_curve(self, country: str) -> dict:
         """
@@ -192,11 +256,10 @@ class YieldCurveFetcher:
 
         yields_data = []
 
-        for bond in config['bonds']:
-            print(f"Fetching {bond['name']}...")
-            data = self.fetch_bond_yield(bond['name'], country)
+        for bond_config in config['bonds']:
+            print(f"Fetching {bond_config['name']} ({bond_config['period']}Y)...")
+            data = self.fetch_bond_yield(bond_config, country)
             if data:
-                data['period'] = bond['period']
                 yields_data.append(data)
 
         if yields_data:
@@ -214,6 +277,7 @@ class YieldCurveFetcher:
             self.results[country] = result
             return result
 
+        print(f"Warning: No bond data fetched for {country}")
         return None
 
     def fetch_all_countries(self) -> dict:
