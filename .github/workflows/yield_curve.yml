@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # 手動実行も可能
   push:
     paths:
-      - 'market/scripts/fetch_yield_curve_yfinance.py'
+      - 'market/scripts/fetch_yield_curve.py'
       - '.github/workflows/yield_curve.yml'
 
 permissions:
@@ -21,19 +21,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.9
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.9'
+
+      - name: Install Chrome and ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+          # chromedriverのパスを確認
+          which chromedriver
+          chromedriver --version
+
+      - name: Set up Chrome environment
+        run: |
+          # ChromeとChromeDriverのパスを環境変数に設定
+          echo "CHROME_BIN=/usr/bin/chromium-browser" >> $GITHUB_ENV
+          echo "CHROMEDRIVER_PATH=/usr/bin/chromedriver" >> $GITHUB_ENV
+          # PATHにchromedriverを追加
+          echo "/usr/bin/chromedriver" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
-          pip install yfinance pandas matplotlib numpy
+          pip install investpy pandas matplotlib numpy selenium requests lxml
 
-      - name: Fetch yield curves using yfinance
+      - name: Fetch yield curves
         run: |
           cd market/scripts
-          python fetch_yield_curve_yfinance.py
+          python fetch_yield_curve.py
 
       - name: Commit and push
         run: |
