@@ -9,6 +9,8 @@ on:
     paths:
       - 'market/scripts/fetch_yield_curve.py'
       - '.github/workflows/yield_curve.yml'
+    branches:
+      - master
 
 permissions:
   contents: write
