@@ -37,22 +37,6 @@ import numpy as np
 script_dir = os.path.dirname(os.path.abspath(__file__))
 repo_root = os.path.dirname(os.path.dirname(script_dir))
 
-# investpyがChromeをヘッドレスモードで使用するための設定
-# Chromeオプションを設定して、GitHub Actions環境でも動作するようにする
-import selenium
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-
-# Chromeオプションの設定
-chrome_options = ChromeOptions()
-chrome_options.add_argument('--headless')
-chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument('--disable-dev-shm-usage')
-chrome_options.add_argument('--disable-gpu')
-chrome_options.add_argument('--window-size=1920,1080')
-chrome_options.add_argument('--disable-extensions')
-chrome_options.add_argument('--disable-features=VizDisplayCompositor')
-chrome_options.add_argument('--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-
 # 日本語フォント設定（matplotlibで日本語を表示するため）
 # Termux環境ではフォントが限られているため、英語で表示することを推奨
 plt.rcParams['font.family'] = 'DejaVu Sans'
@@ -128,17 +112,20 @@ class YieldCurveFetcher:
     def __init__(self):
         self.results = {}
 
-    def fetch_bond_yield(self, bond_name: str) -> dict:
+    def fetch_bond_yield(self, bond_name: str, country: str = None) -> dict:
         """
         個別の国債利回りを取得
 
         Args:
             bond_name: 国債名（例: 'Japan 10Y'）
+            country: 国名（オプション）
 
         Returns:
             dict: 利回りデータ
         """
         try:
+            print(f"  Attempting to fetch {bond_name}...")
+
             # 最新のデータを取得
             data = inv.bonds.get_bond_historical_data(
                 bond_name,
@@ -147,6 +134,8 @@ class YieldCurveFetcher:
             )
 
             if data is not None and not data.empty:
+                print(f"  Successfully fetched {bond_name}: {len(data)} records")
+
                 # 最新の利回り（最終行）
                 latest = data.iloc[-1]
                 latest_yield = latest['Close']
@@ -162,20 +151,24 @@ class YieldCurveFetcher:
                     change = None
                     change_pct = None
 
-                return {
+                result = {
                     'name': bond_name,
-                    'yield': latest_yield,
-                    'previous_yield': previous_yield,
-                    'change': change,
-                    'change_pct': change_pct,
+                    'yield': float(latest_yield) if pd.notna(latest_yield) else None,
+                    'previous_yield': float(previous_yield) if previous_yield is not None and pd.notna(previous_yield) else None,
+                    'change': float(change) if change is not None and pd.notna(change) else None,
+                    'change_pct': float(change_pct) if change_pct is not None and pd.notna(change_pct) else None,
                     'date': latest.name.strftime('%Y-%m-%d') if hasattr(latest.name, 'strftime') else str(latest.name),
                 }
+                print(f"  Yield: {result['yield']:.2f}%")
+                return result
             else:
                 print(f"  No data for {bond_name}")
                 return None
 
         except Exception as e:
-            print(f"  Error fetching {bond_name}: {e}")
+            print(f"  Error fetching {bond_name}: {type(e).__name__}: {e}")
+            import traceback
+            print(f"  Traceback: {traceback.format_exc()}")
             return None
 
     def fetch_country_yield_curve(self, country: str) -> dict:
@@ -201,7 +194,7 @@ class YieldCurveFetcher:
 
         for bond in config['bonds']:
             print(f"Fetching {bond['name']}...")
-            data = self.fetch_bond_yield(bond['name'])
+            data = self.fetch_bond_yield(bond['name'], country)
             if data:
                 data['period'] = bond['period']
                 yields_data.append(data)
@@ -468,31 +461,6 @@ def main():
     except ImportError:
         print("investpy not installed!")
         print("Install with: pip install investpy pandas matplotlib numpy")
-        return
-
-    print()
-
-    # investpyの設定（ChromeDriverのパスを設定）
-    # ChromeDriverはGitHub Actions環境でインストール済み
-    import os
-    chrome_driver_path = '/usr/bin/chromedriver'
-    if os.path.exists(chrome_driver_path):
-        os.environ['CHROMEDRIVER_PATH'] = chrome_driver_path
-        print(f"ChromeDriver found at: {chrome_driver_path}")
-    else:
-        print("ChromeDriver not found at standard location")
-
-    # テスト: 利用可能な国債を検索
-    print("\nTesting investpy bond search...")
-    try:
-        # 日本の国債を検索してみる
-        japan_bonds = inv.bonds.get_bonds_list(country='japan')
-        print(f"Found {len(japan_bonds)} bonds for Japan")
-        if japan_bonds:
-            print(f"Sample bonds: {japan_bonds[:5]}")
-    except Exception as e:
-        print(f"Error searching bonds: {e}")
-        print("investpy may not be working properly due to Investing.com structure changes")
         return
 
     print()
