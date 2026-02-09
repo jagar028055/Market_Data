@@ -33,67 +33,63 @@ plt.rcParams['font.family'] = 'DejaVu Sans'
 plt.rcParams['axes.unicode_minus'] = False
 
 # 各国の国債ティッカー設定
+# Yahoo Financeのシンボルを使用
 BONDS_CONFIG = {
     'japan': {
         'name': 'Japan',
         'name_ja': '日本',
         'tickers': [
-            {'symbol': '^JP6MEUR', 'name': 'Japan 2Y', 'period': 2},
-            {'symbol': '^JP5MEUR', 'name': 'Japan 5Y', 'period': 5},
-            {'symbol': '^JP10MEUR', 'name': 'Japan 10Y', 'period': 10},
-            {'symbol': '^JP20MEUR', 'name': 'Japan 20Y', 'period': 20},
-            {'symbol': '^JP30MEUR', 'name': 'Japan 30Y', 'period': 30},
-        ],
-        # 代替ティッカー（Investing.comベース）
-        'alternative_tickers': [
-            {'symbol': 'JGB6M=F', 'name': 'Japan 2Y', 'period': 2},
-            {'symbol': 'JGB=F', 'name': 'Japan 10Y', 'period': 10},
+            {'symbol': '^JP6MEUR', 'name': 'Japan 2Y', 'period': 2, 'alternatives': ['JGB2Y=F']},
+            {'symbol': '^JP5MEUR', 'name': 'Japan 5Y', 'period': 5, 'alternatives': ['JGB5Y=F']},
+            {'symbol': '^JP10MEUR', 'name': 'Japan 10Y', 'period': 10, 'alternatives': ['JGB=F', 'JGB10Y=F']},
+            {'symbol': '^JP20MEUR', 'name': 'Japan 20Y', 'period': 20, 'alternatives': ['JGB20Y=F']},
+            {'symbol': '^JP30MEUR', 'name': 'Japan 30Y', 'period': 30, 'alternatives': ['JGB30Y=F']},
         ]
     },
     'united states': {
         'name': 'United States',
         'name_ja': '米国',
         'tickers': [
-            {'symbol': '^FVX', 'name': 'US 2Y', 'period': 2},
-            {'symbol': '^FVXR', 'name': 'US 5Y', 'period': 5},
-            {'symbol': '^TNX', 'name': 'US 10Y', 'period': 10},
-            {'symbol': '^TYX', 'name': 'US 30Y', 'period': 30},
+            {'symbol': '^FVX', 'name': 'US 2Y', 'period': 2, 'alternatives': ['US2Y=F']},
+            {'symbol': '^FVXR', 'name': 'US 5Y', 'period': 5, 'alternatives': ['US5Y=F']},
+            {'symbol': '^TNX', 'name': 'US 10Y', 'period': 10, 'alternatives': ['US10Y=F']},
+            {'symbol': '^TYX', 'name': 'US 30Y', 'period': 30, 'alternatives': ['US30Y=F']},
         ]
     },
     'germany': {
         'name': 'Germany',
         'name_ja': 'ドイツ',
         'tickers': [
-            {'symbol': 'GB2Y10Y=F', 'name': 'Germany 2Y', 'period': 2},  # 近似
-            {'symbol': 'GB5Y10Y=F', 'name': 'Germany 5Y', 'period': 5},  # 近似
-            {'symbol': 'TMBMKDE-10Y', 'name': 'Germany 10Y', 'period': 10},
+            {'symbol': 'TMBMKDE-02Y', 'name': 'Germany 2Y', 'period': 2, 'alternatives': ['BUND2Y=F']},
+            {'symbol': 'TMBMKDE-05Y', 'name': 'Germany 5Y', 'period': 5, 'alternatives': ['BUND5Y=F']},
+            {'symbol': 'TMBMKDE-10Y', 'name': 'Germany 10Y', 'period': 10, 'alternatives': ['BUND10Y=F']},
         ]
     },
     'france': {
         'name': 'France',
         'name_ja': 'フランス',
         'tickers': [
-            {'symbol': 'TMBMKFR-02Y', 'name': 'France 2Y', 'period': 2},
-            {'symbol': 'TMBMKFR-05Y', 'name': 'France 5Y', 'period': 5},
-            {'symbol': 'TMBMKFR-10Y', 'name': 'France 10Y', 'period': 10},
+            {'symbol': 'TMBMKFR-02Y', 'name': 'France 2Y', 'period': 2, 'alternatives': ['OAT2Y=F']},
+            {'symbol': 'TMBMKFR-05Y', 'name': 'France 5Y', 'period': 5, 'alternatives': ['OAT5Y=F']},
+            {'symbol': 'TMBMKFR-10Y', 'name': 'France 10Y', 'period': 10, 'alternatives': ['OAT10Y=F']},
         ]
     },
     'united kingdom': {
         'name': 'United Kingdom',
         'name_ja': 'イギリス',
         'tickers': [
-            {'symbol': 'GB00Y2Y', 'name': 'UK 2Y', 'period': 2},
-            {'symbol': 'GB00Y5Y', 'name': 'UK 5Y', 'period': 5},
-            {'symbol': 'GB00Y10Y', 'name': 'UK 10Y', 'period': 10},
+            {'symbol': 'TMBMKGB-02Y', 'name': 'UK 2Y', 'period': 2, 'alternatives': ['GILT2Y=F']},
+            {'symbol': 'TMBMKGB-05Y', 'name': 'UK 5Y', 'period': 5, 'alternatives': ['GILT5Y=F']},
+            {'symbol': 'TMBMKGB-10Y', 'name': 'UK 10Y', 'period': 10, 'alternatives': ['GILT10Y=F']},
         ]
     },
     'australia': {
         'name': 'Australia',
         'name_ja': 'オーストラリア',
         'tickers': [
-            {'symbol': 'AU2Y10Y=F', 'name': 'Australia 2Y', 'period': 2},
-            {'symbol': 'AU5Y10Y=F', 'name': 'Australia 5Y', 'period': 5},
-            {'symbol': 'TMBMKAU-10Y', 'name': 'Australia 10Y', 'period': 10},
+            {'symbol': 'TMBMKAU-02Y', 'name': 'Australia 2Y', 'period': 2, 'alternatives': ['AU2Y=F']},
+            {'symbol': 'TMBMKAU-05Y', 'name': 'Australia 5Y', 'period': 5, 'alternatives': ['AU5Y=F']},
+            {'symbol': 'TMBMKAU-10Y', 'name': 'Australia 10Y', 'period': 10, 'alternatives': ['AU10Y=F']},
         ]
     },
 }
@@ -105,59 +101,76 @@ class YieldCurveFetcher:
     def __init__(self):
         self.results = {}
 
-    def fetch_bond_yield(self, symbol: str, name: str, period: int) -> dict:
+    def fetch_bond_yield(self, ticker_config: dict) -> dict:
         """
         個別の国債利回りを取得
 
         Args:
-            symbol: ティッカーシンボル
-            name: 国債名
-            period: 期間（年）
+            ticker_config: ティッカー設定辞書（symbol, name, period, alternativesを含む）
 
         Returns:
             dict: 利回りデータ
         """
-        try:
-            # 過去7日間のデータを取得
-            end_date = datetime.now()
-            start_date = end_date - timedelta(days=7)
+        symbol = ticker_config['symbol']
+        name = ticker_config['name']
+        period = ticker_config['period']
+        alternatives = ticker_config.get('alternatives', [])
 
-            ticker = yf.Ticker(symbol)
-            hist = ticker.history(start=start_date, end=end_date)
+        # 試行するシンボルのリスト（メインのシンボルを優先）
+        all_symbols = [symbol] + alternatives
 
-            if hist is not None and not hist.empty:
-                # 最新の終値
-                latest = hist.iloc[-1]
-                latest_yield = latest['Close']
-
-                # 前日比
-                if len(hist) >= 2:
-                    previous = hist.iloc[-2]
-                    previous_yield = previous['Close']
-                    change = latest_yield - previous_yield
-                    change_pct = (change / previous_yield) * 100 if previous_yield != 0 else 0
+        for idx, current_symbol in enumerate(all_symbols):
+            try:
+                if idx == 0:
+                    print(f"  Fetching {name} ({current_symbol})...")
                 else:
-                    previous_yield = None
-                    change = None
-                    change_pct = None
+                    print(f"  Trying alternative: {name} ({current_symbol})...")
 
-                return {
-                    'symbol': symbol,
-                    'name': name,
-                    'period': period,
-                    'yield': latest_yield,
-                    'previous_yield': previous_yield,
-                    'change': change,
-                    'change_pct': change_pct,
-                    'date': latest.name.strftime('%Y-%m-%d') if hasattr(latest.name, 'strftime') else str(latest.name),
-                }
-            else:
-                print(f"  No data for {name} ({symbol})")
-                return None
+                # 過去7日間のデータを取得
+                end_date = datetime.now()
+                start_date = end_date - timedelta(days=7)
 
-        except Exception as e:
-            print(f"  Error fetching {name} ({symbol}): {e}")
-            return None
+                ticker = yf.Ticker(current_symbol)
+                hist = ticker.history(start=start_date, end=end_date)
+
+                if hist is not None and not hist.empty:
+                    # 最新の終値
+                    latest = hist.iloc[-1]
+                    latest_yield = latest['Close']
+
+                    # 前日比
+                    if len(hist) >= 2:
+                        previous = hist.iloc[-2]
+                        previous_yield = previous['Close']
+                        change = latest_yield - previous_yield
+                        change_pct = (change / previous_yield) * 100 if previous_yield != 0 else 0
+                    else:
+                        previous_yield = None
+                        change = None
+                        change_pct = None
+
+                    result = {
+                        'symbol': current_symbol,
+                        'name': name,
+                        'period': period,
+                        'yield': latest_yield,
+                        'previous_yield': previous_yield,
+                        'change': change,
+                        'change_pct': change_pct,
+                        'date': latest.name.strftime('%Y-%m-%d') if hasattr(latest.name, 'strftime') else str(latest.name),
+                    }
+                    print(f"  Success: {name} = {result['yield']:.2f}%")
+                    return result
+                else:
+                    print(f"  No data for {name} ({current_symbol})")
+                    continue
+
+            except Exception as e:
+                print(f"  Error fetching {name} ({current_symbol}): {e}")
+                continue
+
+        print(f"  Failed to fetch {name} after trying all symbols")
+        return None
 
     def fetch_country_yield_curve(self, country: str) -> dict:
         """
@@ -180,9 +193,8 @@ class YieldCurveFetcher:
 
         yields_data = []
 
-        for bond in config['tickers']:
-            print(f"Fetching {bond['name']} ({bond['symbol']})...")
-            data = self.fetch_bond_yield(bond['symbol'], bond['name'], bond['period'])
+        for ticker_config in config['tickers']:
+            data = self.fetch_bond_yield(ticker_config)
             if data:
                 yields_data.append(data)
 
@@ -201,6 +213,7 @@ class YieldCurveFetcher:
             self.results[country] = result
             return result
 
+        print(f"Warning: No bond data fetched for {country}")
         return None
 
     def fetch_all_countries(self) -> dict:
