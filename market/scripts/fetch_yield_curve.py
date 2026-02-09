@@ -486,6 +486,33 @@ def main():
 
     print("\nDone!")
 
+    # デバッグ: 実際に保存されたファイルを確認
+    print("\n" + "=" * 80)
+    print("DEBUG: Checking saved files...")
+    print("=" * 80)
+
+    import os
+    json_dir = os.path.join(repo_root, 'market/data/yield_curves/json')
+    images_dir = os.path.join(repo_root, 'market/data/yield_curves/images')
+    markdown_dir = os.path.join(repo_root, 'market/data/yield_curves/markdown')
+
+    print(f"\nrepo_root: {repo_root}")
+    print(f"Current working directory: {os.getcwd()}")
+
+    for dirname, dirpath in [('JSON', json_dir), ('Images', images_dir), ('Markdown', markdown_dir)]:
+        print(f"\n{dirname} directory: {dirpath}")
+        if os.path.exists(dirpath):
+            files = os.listdir(dirpath)
+            print(f"  Files found: {len(files)}")
+            for f in files:
+                filepath = os.path.join(dirpath, f)
+                size = os.path.getsize(filepath)
+                print(f"    - {f} ({size} bytes)")
+        else:
+            print(f"  Directory does not exist!")
+
+    print("\n" + "=" * 80)
+
 
 if __name__ == "__main__":
     main()
