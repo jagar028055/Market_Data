@@ -154,9 +154,12 @@ class YieldCurveFetcher:
                     else:
                         print(f"  Trying alternative name: {current_name} (attempt {attempt + 1}/{retry_count})...")
 
-                    # Investing.comのボット対策を回避するため、リクエスト前に遅延を追加
+                    # Investing.comのボット対策を回避するため、ランダムな遅延を追加
                     import time
-                    time.sleep(3)  # 各リクエスト前に3秒待機
+                    import random
+                    delay = random.uniform(10, 20)  # 10〜20秒のランダムな遅延
+                    print(f"  Waiting {delay:.1f} seconds before request...")
+                    time.sleep(delay)
 
                     # 最新のデータを取得
                     data = inv.bonds.get_bond_historical_data(
@@ -201,7 +204,10 @@ class YieldCurveFetcher:
                         print(f"  No data for {current_name} (attempt {attempt + 1}/{retry_count})")
                         if attempt < retry_count - 1:
                             import time
-                            time.sleep(2)  # リトライ前に待機
+                            import random
+                            retry_delay = random.uniform(5, 10)  # 5〜10秒のランダムな遅延
+                            print(f"  Waiting {retry_delay:.1f}s before retry...")
+                            time.sleep(retry_delay)
                         continue
 
                 except Exception as e:
@@ -243,6 +249,13 @@ class YieldCurveFetcher:
         print(f"Fetching yield curve for {config['name_ja']} ({config['name']})")
         print(f"{'=' * 60}")
 
+        # 最初のリクエスト前に少し待機して、ボット検出を回避
+        import time
+        import random
+        initial_delay = random.uniform(5, 10)
+        print(f"Initial delay: {initial_delay:.1f} seconds...")
+        time.sleep(initial_delay)
+
         yields_data = []
 
         for bond_config in config['bonds']:
@@ -273,9 +286,12 @@ class YieldCurveFetcher:
         """全対象国のイールドカーブを取得"""
         for country in BONDS_CONFIG.keys():
             self.fetch_country_yield_curve(country)
-            # 各国の間に遅延を追加して、Investing.comのボット対策を回避
+            # 各国の間にランダムな遅延を追加して、Investing.comのボット対策を回避
             import time
-            time.sleep(5)  # 各国の間に5秒待機
+            import random
+            delay = random.uniform(15, 30)  # 15〜30秒のランダムな遅延
+            print(f"Waiting {delay:.1f} seconds before next country...")
+            time.sleep(delay)
 
         return self.results
 
