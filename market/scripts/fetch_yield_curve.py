@@ -39,6 +39,40 @@ try:
     print(f"Updated investpy User-Agent to: {get_latest_user_agent()[:50]}...")
 except Exception as e:
     print(f"Warning: Could not update User-Agent: {e}")
+
+# investpyのrequests.postをmonkey patchして、より多くのヘッダーを追加
+import requests
+original_post = requests.post
+
+def enhanced_post(url, headers=None, data=None, **kwargs):
+    """リクエストヘッダーを拡張して、よりブラウザらしく見せる"""
+    if headers is None:
+        headers = {}
+
+    # より完全なブラウザヘッダーを追加
+    enhanced_headers = {
+        "User-Agent": get_latest_user_agent(),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "Accept-Language": "en-US,en;q=0.9,ja;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-User": "?1",
+        "Cache-Control": "max-age=0",
+        "DNT": "1",
+    }
+
+    # 呼び出し元からのヘッダーで上書き（X-Requested-Withなど）
+    enhanced_headers.update(headers)
+
+    return original_post(url, headers=enhanced_headers, data=data, **kwargs)
+
+# requests.postを置き換え
+requests.post = enhanced_post
+print("Enhanced requests.post with additional browser headers")
 import matplotlib
 # ヘッドレス環境（GitHub Actions）で動作させるためにAggバックエンドを使用
 matplotlib.use('Agg')
@@ -157,7 +191,7 @@ class YieldCurveFetcher:
                     # Investing.comのボット対策を回避するため、ランダムな遅延を追加
                     import time
                     import random
-                    delay = random.uniform(10, 20)  # 10〜20秒のランダムな遅延
+                    delay = random.uniform(20, 40)  # 20〜40秒のランダムな遅延
                     print(f"  Waiting {delay:.1f} seconds before request...")
                     time.sleep(delay)
 
@@ -252,7 +286,7 @@ class YieldCurveFetcher:
         # 最初のリクエスト前に少し待機して、ボット検出を回避
         import time
         import random
-        initial_delay = random.uniform(5, 10)
+        initial_delay = random.uniform(10, 20)
         print(f"Initial delay: {initial_delay:.1f} seconds...")
         time.sleep(initial_delay)
 
@@ -289,7 +323,7 @@ class YieldCurveFetcher:
             # 各国の間にランダムな遅延を追加して、Investing.comのボット対策を回避
             import time
             import random
-            delay = random.uniform(15, 30)  # 15〜30秒のランダムな遅延
+            delay = random.uniform(30, 60)  # 30〜60秒のランダムな遅延
             print(f"Waiting {delay:.1f} seconds before next country...")
             time.sleep(delay)
 
