@@ -164,7 +164,7 @@ class YieldCurveFetcher:
     def __init__(self):
         self.results = {}
 
-    def fetch_bond_yield(self, bond_config: dict, country: str = None, retry_count: int = 2) -> dict:
+    def fetch_bond_yield(self, bond_config: dict, country: str = None, retry_count: int = 1) -> dict:
         """
         個別の国債利回りを取得
 
